@@ -307,7 +307,6 @@
 <div class="blob"></div>
 <div class="blob blob-2"></div>
 
-<!-- IMMERSIVE PHOTO CAROUSEL MODAL -->
 <div id="region-photo-modal" class="photo-modal">
     <div class="modal-content">
         <span class="close-modal-btn" onclick="closePhotoModal()">&times;</span>
@@ -347,7 +346,6 @@
 
     <h1 style="text-align: center; font-size: 30px; margin: 0 0 10px 0; letter-spacing: 1px;">🇵🇭 Biyahe ni Juan</h1>
     
-    <!-- LOGIN SECTION -->
     <div id="login-section" class="login-box">
         <p style="text-align: center; color: #eee; font-size: 14px; margin-bottom: 25px;">Welcome back, Traveler!</p>
         <input type="text" id="username" placeholder="Username">
@@ -357,11 +355,9 @@
         <button class="signup-btn" onclick="window.location.href='signup.html'">Create New Account</button>
     </div>
 
-    <!-- MAIN TRIP SECTION -->
     <div id="trip-section" style="display:none;">
         <div class="dashboard-layout">
             
-            <!-- COLUMN 1: Forms & Primary Buttons -->
             <div class="layout-col">
                 <div style="background: rgba(255,255,255,0.02); padding: 20px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.05); height: 100%; box-sizing: border-box; display: flex; flex-direction: column; justify-content: center;">
                     <h3 style="margin: 0 0 10px 0; text-align: center; font-size: 18px;" id="journal-title">Travel Journal</h3>
@@ -372,11 +368,10 @@
                     <button id="main-btn" onclick="saveTrip()" style="background: #28a745; margin-top: 10px;">Add to Journal +</button>
                     <button id="cancel-btn" onclick="resetForm()" style="display:none; background: #6c757d; margin-top: 5px;">Cancel Edit</button>
                 </div>
-                <button class="explore-btn" onclick="window.location.href='/destinations.html'">Explore Places 🌟</button>
+                <button class="explore-btn" onclick="window.location.href='destinations.html'">Explore Places 🌟</button>
                 <button class="logout-btn" onclick="logout()" style="background: #dc3545;">Logout 🚪</button>
             </div>
 
-            <!-- COLUMN 2: INTERACTIVE SVG MAP -->
             <div class="layout-col">
                 <p style="margin: 0 0 5px 0; font-size: 13px; color: #ccc; text-align: center; font-weight: bold;" id="map-heading">Interactive Map</p>
                 
@@ -404,7 +399,6 @@
                         
                         <rect width="100%" height="100%" fill="url(#mapGrid)" pointer-events="none" />
 
-                        <!-- INTERACTIVE LUZON -->
                         <g id="svg-luzon" class="island-group" onclick="mapIslandClick('Luzon')" onmouseover="showLocation('Luzon 🌾')" onmouseleave="hideLocation()">
                             <circle cx="56" cy="4" r="0.8"/><circle cx="58" cy="8" r="1"/> <circle cx="54" cy="12" r="0.7"/>
                             <path d="M50,16 L56,16 L61,21 L60,28 L64,31 L64,36 L68,39 L74,38 L76,43 L70,49 L74,54 L78,53 L76,59 L71,62 L74,68 L69,72 L65,68 L64,61 L61,60 L57,63 L58,57 L54,55 L56,48 L50,46 L45,46 L41,37 L47,27 Z"/>
@@ -415,7 +409,6 @@
                             <circle cx="33" cy="63" r="1"/>
                         </g>
 
-                        <!-- INTERACTIVE VISAYAS -->
                         <g id="svg-visayas" class="island-group" onclick="mapIslandClick('Visayas')" onmouseover="showLocation('Visayas 🏖️')" onmouseleave="hideLocation()">
                             <path d="M69,67 L75,66 L78,74 L75,81 L70,76 L67,71 Z"/>
                             <path d="M66,77 L70,76 L71,85 L67,90 L64,84 Z"/>
@@ -426,7 +419,6 @@
                             <circle cx="51" cy="65" r="0.7"/><circle cx="48" cy="81" r="0.6"/><circle cx="56" cy="96" r="0.6"/>
                         </g>
 
-                        <!-- INTERACTIVE MINDANAO -->
                         <g id="svg-mindanao" class="island-group" onclick="mapIslandClick('Mindanao')" onmouseover="showLocation('Mindanao 🏔️')" onmouseleave="hideLocation()">
                             <path d="M48,108 L56,105 L66,107 L73,103 L76,108 L72,112 L81,111 L83,121 L87,121 L85,134 L80,131 L81,142 L76,145 L73,136 L66,140 L63,134 L59,136 L59,144 L53,143 L50,135 L52,126 L45,126 L38,125 L34,117 L43,116 Z"/>
                             <circle cx="77" cy="100" r="1"/><path d="M75,101 L78,104 L74,105 Z"/>
@@ -444,7 +436,6 @@
                 </div>
             </div>
 
-            <!-- COLUMN 3: History Panel -->
             <div class="layout-col">
                 <p style="margin: 0 0 5px 0; font-size: 13px; color: #ccc; text-align: center; font-weight: bold;">Travel History</p>
                 <div class="history-panel">
@@ -455,7 +446,6 @@
         </div>
     </div>
 
-    <!-- LOWER CARD SECTION -->
     <div class="clock-card">
         <div class="clock-time" id="live-clock">00:00:00 AM</div>
         <div class="clock-date" id="live-date">Loading Date...</div>
@@ -469,6 +459,11 @@
 </div>
 
 <script>
+    // DYNAMIC CONTROL: Inaalam kung localhost o nasa live GitHub Pages ang gumagamit
+    const API_URL = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+        ? 'http://localhost:3000'
+        : 'BYPASS_ONLINE';
+
     // DATA LAYER FOR DESTINATION EXPLORATION PHOTOS
     const regionMediaData = {
         Luzon: {
@@ -554,69 +549,68 @@
     }
 
     function showLocation(name) {
-    const currentLang = localStorage.getItem('lang') || 'en';
-    const indicator = document.getElementById('map-hover-text');
-    
-    // 1. Determine colors based on which island you are pointing at
-    let textColor = "#00d2ff";   // Default Cyan
-    let borderColor = "rgba(0, 210, 255, 0.4)";
-    let shadowColor = "rgba(0, 210, 255, 0.2)";
+        const currentLang = localStorage.getItem('lang') || 'en';
+        const indicator = document.getElementById('map-hover-text');
+        
+        let textColor = "#00d2ff";   
+        let borderColor = "rgba(0, 210, 255, 0.4)";
+        let shadowColor = "rgba(0, 210, 255, 0.2)";
 
-    if (name.includes("Luzon")) {
-        textColor = "#ffc107";   // Luzon Gold/Yellow
-        borderColor = "rgba(255, 193, 7, 0.6)";
-        shadowColor = "rgba(255, 193, 7, 0.3)";
-    } else if (name.includes("Visayas")) {
-        textColor = "#00d2ff";   // Visayas Cyan/Blue
-        borderColor = "rgba(0, 210, 255, 0.6)";
-        shadowColor = "rgba(0, 210, 255, 0.3)";
-    } else if (name.includes("Mindanao")) {
-        textColor = "#2ecc71";   // Mindanao Green
-        borderColor = "rgba(46, 204, 113, 0.6)";
-        shadowColor = "rgba(46, 204, 113, 0.3)";
+        if (name.includes("Luzon")) {
+            textColor = "#ffc107";   
+            borderColor = "rgba(255, 193, 7, 0.6)";
+            shadowColor = "rgba(255, 193, 7, 0.3)";
+        } else if (name.includes("Visayas")) {
+            textColor = "#00d2ff";   
+            borderColor = "rgba(0, 210, 255, 0.6)";
+            shadowColor = "rgba(0, 210, 255, 0.3)";
+        } else if (name.includes("Mindanao")) {
+            textColor = "#2ecc71";   
+            borderColor = "rgba(46, 204, 113, 0.6)";
+            shadowColor = "rgba(46, 204, 113, 0.3)";
+        }
+
+        indicator.style.color = textColor;
+        indicator.style.borderColor = borderColor;
+        indicator.style.boxShadow = `0 4px 15px ${shadowColor}`;
+
+        if (currentLang === 'fil') {
+            const cleanName = name.replace('🌾','').replace('🏖️','').replace('🏔️','').trim();
+            indicator.innerHTML = `Nakaturo ka sa: <strong style="color: ${textColor}">${cleanName}</strong> (I-click para makita ang mga larawan!)`;
+        } else {
+            indicator.innerHTML = `You are pointing at: <strong style="color: ${textColor}">${name}</strong> (Click to see photos!)`;
+        }
     }
 
-    // 2. Apply the dynamic colors to the box styling
-    indicator.style.color = textColor;
-    indicator.style.borderColor = borderColor;
-    indicator.style.boxShadow = `0 4px 15px ${shadowColor}`;
-
-    // 3. Update the text content based on language
-    if (currentLang === 'fil') {
-        const cleanName = name.replace('🌾','').replace('🏖️','').replace('🏔️','').trim();
-        indicator.innerHTML = `Nakaturo ka sa: <strong style="color: ${textColor}">${cleanName}</strong> (I-click para makita ang mga larawan!)`;
-    } else {
-        indicator.innerHTML = `You are pointing at: <strong style="color: ${textColor}">${name}</strong> (Click to see photos!)`;
+    function hideLocation() {
+        const currentLang = localStorage.getItem('lang') || 'en';
+        const indicator = document.getElementById('map-hover-text');
+        
+        indicator.style.color = "#00d2ff";
+        indicator.style.borderColor = "rgba(0, 210, 255, 0.2)";
+        indicator.style.boxShadow = "0 4px 15px rgba(0,0,0,0.2)";
+        
+        indicator.innerText = currentLang === 'fil' ? 'Ituro ang cursor sa mapa upang mag-explore! 🗺️' : 'Hover over the map to explore! 🗺️';
     }
-}
 
-function hideLocation() {
-    const currentLang = localStorage.getItem('lang') || 'en';
-    const indicator = document.getElementById('map-hover-text');
-    
-    // Reset back to original default styles when mouse leaves the map
-    indicator.style.color = "#00d2ff";
-    indicator.style.borderColor = "rgba(0, 210, 255, 0.2)";
-    indicator.style.boxShadow = "0 4px 15px rgba(0,0,0,0.2)";
-    
-    indicator.innerText = currentLang === 'fil' ? 'Ituro ang cursor sa mapa upang mag-explore! 🗺️' : 'Hover over the map to explore! 🗺️';
-}
     async function login() {
         const username = document.getElementById('username').value;
         const password = document.getElementById('password').value;
         const msgDiv = document.getElementById('message');
 
-        // 1. DITO MO I-PASTE SA LOOB NG INDEX.HTML (PALITAN ANG LUMANG TRY BLOCK)
-        if (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
-            // KUNG ONLINE (Para sa mga kaibigan mo - DIRETSO AGAD SA DASHBOARD)
+        // SAKTO NA: Kapag online, binubuksan na nito ang mismong dashboard section nang walang redirect sa ibang page!
+        if (API_URL === 'BYPASS_ONLINE') {
             alert("Welcome to Biyahe ni Juan! (Demo Mode Active)");
-            window.location.href = "destinations.html"; 
-            return; // Hihinto na rito para hindi mag-error online
+            localStorage.setItem('token', 'mock_online_token');
+            document.getElementById('main-container').classList.add('dashboard-active');
+            document.getElementById('login-section').style.display = 'none';
+            document.getElementById('trip-section').style.display = 'block';
+            loadTrips();
+            return;
         }
 
-        // KUNG NASA LAPTOP MO (Gagana ang totoong MongoDB backend mo sa local presentation)
         try {
-            const response = await fetch('http://localhost:3000/api/auth/login', {
+            const response = await fetch(`${API_URL}/api/auth/login`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ username, password })
@@ -640,6 +634,7 @@ function hideLocation() {
 
     function logout() {
         localStorage.removeItem('token');
+        localStorage.removeItem('online_trips');
         document.getElementById('main-container').classList.remove('dashboard-active');
         location.reload();
     }
@@ -651,8 +646,22 @@ function hideLocation() {
         const token = localStorage.getItem('token');
         if (!destination || !budget) return alert("Fill all fields");
 
+        if (API_URL === 'BYPASS_ONLINE') {
+            let onlineTrips = JSON.parse(localStorage.getItem('online_trips')) || [];
+            if (editId) {
+                onlineTrips = onlineTrips.map(t => t._id === editId ? { _id: editId, destination, budget } : t);
+            } else {
+                onlineTrips.push({ _id: 'local_' + Date.now(), destination, budget });
+            }
+            localStorage.setItem('online_trips', JSON.stringify(onlineTrips));
+            triggerMapHighlights(destination);
+            resetForm(); 
+            loadTrips();
+            return;
+        }
+
         const method = editId ? 'PUT' : 'POST';
-        const url = editId ? `/api/trips/${editId}` : '/api/trips';
+        const url = editId ? `${API_URL}/api/trips/${editId}` : `${API_URL}/api/trips`;
 
         const res = await fetch(url, {
             method: method,
@@ -672,15 +681,38 @@ function hideLocation() {
 
     async function loadTrips() {
         const token = localStorage.getItem('token');
+        const listDiv = document.getElementById('trip-list');
+        listDiv.innerHTML = '';
+        clearMapTriggers();
+
+        if (API_URL === 'BYPASS_ONLINE') {
+            const trips = JSON.parse(localStorage.getItem('online_trips')) || [];
+            trips.forEach((trip, index) => {
+                triggerMapHighlights(trip.destination);
+                const delay = index * 0.05;
+                listDiv.innerHTML += `
+                    <div class="trip-item" style="animation-delay: ${delay}s">
+                        <div>
+                            <strong style="color: #00d2ff;">📍 ${trip.destination}</strong><br>
+                            <small>₱${trip.budget}</small>
+                        </div>
+                        <div style="display:flex; gap:5px;">
+                            <button onclick="prepareEdit('${trip._id}', '${trip.destination}', '${trip.budget}')" 
+                                    style="width: auto; background: #ffc107; color: black; padding: 6px 10px; font-size: 11px; margin: 0;">✏️</button>
+                            <button onclick="deleteTrip('${trip._id}')" 
+                                    style="width: auto; background: #ff4d4d; padding: 6px 10px; font-size: 11px; margin: 0;">🗑️</button>
+                        </div>
+                    </div>
+                `;
+            });
+            return;
+        }
+
         try {
-            const response = await fetch('/api/trips', {
+            const response = await fetch(`${API_URL}/api/trips`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             }); 
             const trips = await response.json();
-            const listDiv = document.getElementById('trip-list');
-            listDiv.innerHTML = '';
-
-            clearMapTriggers();
 
             trips.forEach((trip, index) => {
                 triggerMapHighlights(trip.destination);
@@ -760,8 +792,17 @@ function hideLocation() {
 
     async function deleteTrip(id) {
         if (!confirm("Delete adventure?")) return;
+
+        if (API_URL === 'BYPASS_ONLINE') {
+            let onlineTrips = JSON.parse(localStorage.getItem('online_trips')) || [];
+            onlineTrips = onlineTrips.filter(t => t._id !== id);
+            localStorage.setItem('online_trips', JSON.stringify(onlineTrips));
+            loadTrips();
+            return;
+        }
+
         const token = localStorage.getItem('token');
-        await fetch(`/api/trips/${id}`, { 
+        await fetch(`${API_URL}/api/trips/${id}`, { 
             method: 'DELETE',
             headers: { 'Authorization': `Bearer ${token}` }
         });
