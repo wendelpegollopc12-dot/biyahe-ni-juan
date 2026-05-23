@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Join Biyahe ni Juan</title>
+    <style>
+
+        body {
+            margin: 0; padding: 0; height: 100vh;
+            display: flex; justify-content: center; align-items: center;
+            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), 
+                        url('https://wallpaperaccess.com/full/22986.jpg');
+            background-size: cover; background-position: center;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .blob {
+            position: absolute;
+            width: 350px; height: 350px;
+            background: linear-gradient(135deg, rgba(40, 167, 69, 0.2), rgba(33, 136, 56, 0.2));
+            border-radius: 50%;
+            filter: blur(80px);
+            z-index: -1;
+            animation: moveBlob 18s infinite alternate ease-in-out;
+        }
+        .blob-2 {
+            right: 5%; bottom: 10%;
+            background: rgba(0, 210, 255, 0.15);
+            animation-duration: 12s;
+        }
+        @keyframes moveBlob {
+            from { transform: translate(0, 0) rotate(0deg); }
+            to { transform: translate(80px, 150px) rotate(30deg); }
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 40px; border-radius: 25px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
+            color: white; width: 380px;
+            position: relative;
+            overflow: hidden;
+            animation: containerEntry 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        .container::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -150%;
+            width: 50%; height: 100%;
+            background: linear-gradient(to right, transparent, rgba(255,255,255,0.2), transparent);
+            transform: skewX(-25deg);
+            transition: 0.8s;
+        }
+        .container:hover::before {
+            left: 150%;
+        }
+
+        @keyframes containerEntry {
+            from { opacity: 0; transform: scale(0.9) translateY(30px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
+        input {
+            width: 100%; padding: 12px; margin: 10px 0;
+            border-radius: 12px; border: 1px solid rgba(255,255,255,0.1);
+            background: rgba(255, 255, 255, 0.1); color: white;
+            box-sizing: border-box; transition: 0.4s;
+        }
+
+        input:focus { 
+            background: rgba(255, 255, 255, 0.2); 
+            outline: none;
+            border-color: #28a745;
+            transform: translateX(5px);
+        }
+
+        button {
+            width: 100%; padding: 12px;
+            background: linear-gradient(to right, #28a745, #218838);
+            color: white; border: none; border-radius: 12px;
+            font-weight: bold; cursor: pointer; transition: 0.3s;
+            margin-top: 10px;
+        }
+
+        button:hover { 
+            transform: translateY(-3px); 
+            box-shadow: 0 5px 15px rgba(40, 167, 69, 0.4); 
+        }
+
+        .back-btn {
+            background: rgba(255, 255, 255, 0.05) !important;
+            border: 1px solid rgba(255, 255, 255, 0.2) !important;
+            margin-top: 15px;
+            color: #ddd !important;
+            font-size: 14px;
+        }
+        
+        .back-btn:hover { 
+            color: white !important; 
+            background: rgba(255,255,255,0.15) !important; 
+            transform: translateY(-2px);
+        }
+
+        .tips-container {
+            background: rgba(255, 255, 255, 0.05);
+            border-left: 4px solid #2ecc71;
+            padding: 10px 20px;
+            margin-top: 20px;
+            border-radius: 8px;
+            backdrop-filter: blur(5px);
+            color: #ccc;
+            font-size: 13px;
+            animation: fadeIn 1s ease-in;
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="blob"></div>
+<div class="blob blob-2"></div>
+
+<div class="container">
+    <h1 style="text-align: center; font-size: 28px; margin-bottom: 10px; letter-spacing: 1px;">🇵🇭 Biyahe ni Juan</h1>
+    <p style="text-align: center; color: #eee; margin-bottom: 25px; font-size: 14px;">Start your adventure today!</p>
+    
+    <div id="signup-section">
+        <input type="text" id="regUser" placeholder="Choose Username">
+        <input type="password" id="regPass" placeholder="Create Password">
+        <button onclick="register()">Create Account</button>
+        
+        <button class="back-btn" onclick="window.location.href='index.html'">← Back to Login</button>
+    </div>
+
+    <div id="message" style="text-align: center; margin-top: 15px;"></div>
+
+    <div class="tips-container">
+        <p>💡 <strong>Tip for Juan:</strong> <span id="random-tip">I-update ang iyong journal pagkatapos ng gala!</span></p>
+    </div>
+</div>
+
+<script>
+    async function register() {
+        const username = document.getElementById('regUser').value;
+        const password = document.getElementById('regPass').value;
+        const msgDiv = document.getElementById('message');
+
+        if(!username || !password) {
+            msgDiv.innerHTML = `<span style="color: #ffc107;">⚠️ Please fill up all fields!</span>`;
+            return;
+        }
+
+        try {
+            const response = await fetch('/api/auth/register', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username, password })
+            });
+            const data = await response.json();
+
+            if (response.ok) {
+                msgDiv.innerHTML = `<span style="color: #4ee44e;">✅ Success! Redirecting...</span>`;
+                setTimeout(() => {
+                    window.location.href = 'index.html'; 
+                }, 1500);
+            } else {
+                msgDiv.innerHTML = `<span style="color: #ff4d4d;">❌ ${data.error || "Failed"}</span>`;
+            }
+        } catch (err) { 
+            msgDiv.innerHTML = `<span style="color: #ff4d4d;">❌ Server error!</span>`;
+        }
+    }
+
+    const tipsList = [
+        "I-update ang iyong journal pagkatapos ng gala!",
+        "Isang account lang ang kailangan para sa lahat ng hidden gems.",
+        "Gamitin ang matinding password para laging safe ang iyong travel data.",
+        "Siguraduhing tama ang email para sa mga darating na Piso Fare alerts!",
+        "I-filter ang destinations base sa iyong budget at trip mood.",
+        "Siguraduhing puno ang battery ng mga devices para sa mga long rides."
+    ];
+    
+    let tipIndex = 0;
+    setInterval(() => {
+        tipIndex = (tipIndex + 1) % tipsList.length;
+        document.getElementById('random-tip').textContent = tipsList[tipIndex];
+    }, 10000);
+</script>
+</body>
+</html>

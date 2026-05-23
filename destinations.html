@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Biyahe ni Juan - Destinations</title>
+    <style>
+        body {
+            margin: 0; padding: 0;
+            height: 100vh; width: 100vw;
+            display: flex; justify-content: center; align-items: center;
+            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), 
+                        url('https://media.cntraveller.com/photos/6891beb1b47b1897d35cb3ae/16:9/w_2560%2Cc_limit/071725-Best-Beaches-Philippines-Puka-Beach-GettyImages-1161165037.jpg');
+            background-size: cover; background-position: center;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow: hidden; /* No browser scroll */
+            position: relative;
+        }
+
+        .blob {
+            position: absolute; width: 400px; height: 400px;
+            background: linear-gradient(135deg, rgba(0, 210, 255, 0.2), rgba(58, 123, 213, 0.2));
+            border-radius: 50%; filter: blur(80px); z-index: -1;
+            animation: move 25s infinite alternate;
+        }
+        @keyframes move { from { transform: translate(-10%, -10%); } to { transform: translate(20%, 30%); } }
+
+        .app-container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            width: 90%; max-width: 1000px;
+            height: 85vh;
+            border-radius: 30px;
+            display: flex; flex-direction: column;
+            overflow: hidden;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            animation: appEntry 1s ease-out;
+            position: relative;
+        }
+
+        @keyframes appEntry { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
+
+        .header {
+            padding: 30px; text-align: center;
+            background: rgba(255,255,255,0.05);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            z-index: 2;
+        }
+
+        .title-pinas { color: #2ecc71; } 
+        .title-dest { color: #3498db; }  
+
+        .mood-filters {
+            display: flex; justify-content: center; gap: 10px; margin-top: 15px;
+        }
+
+        .mood-btn {
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            color: white; padding: 8px 20px; border-radius: 20px;
+            cursor: pointer; transition: 0.3s; font-size: 13px;
+        }
+
+        .mood-btn:hover, .mood-btn.active {
+            background: #00d2ff; border-color: #00d2ff; color: black; font-weight: bold;
+        }
+
+        .content-scroll {
+            flex: 1; overflow-y: auto; padding: 30px;
+            scrollbar-width: thin; scrollbar-color: rgba(255,255,255,0.3) transparent;
+            z-index: 2;
+        }
+
+        .content-scroll::-webkit-scrollbar { width: 6px; }
+        .content-scroll::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.3); border-radius: 10px; }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px; overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: 0.4s; position: relative;
+            animation: cardPop 0.5s backwards;
+            cursor: pointer;
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            background: rgba(255, 255, 255, 0.12);
+            border-color: #00d2ff;
+            box-shadow: 0 10px 40px rgba(0, 210, 255, 0.3);
+        }
+
+        .card img { 
+            width: 100%; height: 180px; object-fit: cover; 
+            transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1); 
+        }
+        
+        .card:hover img { transform: scale(1.15); }
+
+        .card-body { padding: 20px; }
+        .card-body h3 { margin: 0; color: #00d2ff; font-size: 1.2rem; }
+        .card-body p { font-size: 13px; color: #ccc; margin: 10px 0; line-height: 1.5; }
+
+        .budget-tag {
+            font-size: 12px;
+            color: #2ecc71;
+            font-weight: bold;
+            margin-top: 5px;
+            display: block;
+        }
+
+        .wish-btn {
+            position: absolute; top: 15px; right: 15px;
+            background: rgba(0,0,0,0.5); border: none;
+            width: 35px; height: 35px; border-radius: 50%;
+            color: white; cursor: pointer; font-size: 18px;
+            display: flex; align-items: center; justify-content: center;
+            transition: 0.3s; z-index: 10;
+        }
+
+        .wish-btn.liked { color: #ff4d4d; background: white; transform: scale(1.1); }
+
+        .footer {
+            padding: 20px; text-align: center;
+            background: rgba(0,0,0,0.2); border-top: 1px solid rgba(255,255,255,0.1);
+            z-index: 2;
+        }
+
+        .back-link {
+            color: #aaa; text-decoration: none; font-size: 14px; transition: 0.3s;
+        }
+        .back-link:hover { color: white; }
+
+        @keyframes cardPop { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Spotlight logic */
+        .app-container::before {
+            content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(600px circle at var(--mouse-x) var(--mouse-y), rgba(0, 210, 255, 0.15), transparent 40%);
+            z-index: 1; pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="blob"></div>
+
+    <div class="app-container">
+        <div class="header">
+            <h2 style="margin: 0; letter-spacing: 2px;">
+                 <span class="title-pinas">PINAS</span> <span class="title-dest">📍 PH DESTINATIONS</span>
+            </h2>
+            <div class="mood-filters">
+                <button class="mood-btn active" onclick="filterMood('all', this)">All</button>
+                <button class="mood-btn" onclick="filterMood('chill', this)">Chill</button>
+                <button class="mood-btn" onclick="filterMood('adventure', this)">Adventure</button>
+                <button class="mood-btn" onclick="filterMood('heritage', this)">Heritage</button>
+                <button class="mood-btn" onclick="filterMood('romantic', this)">Romantic</button>
+                <button class="mood-btn" onclick="filterMood('majestic', this)">Majestic</button>
+            </div>
+        </div>
+
+        <div class="content-scroll">
+            <div class="grid" id="places-grid"></div>
+        </div>
+
+        <div class="footer">
+            <a href="index.html" class="back-link">← Return to your Journal</a>
+        </div>
+    </div>
+
+    <!-- Video Popup Modal Component -->
+    <div id="videoModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 1000; justify-content: center; align-items: center; flex-direction: column;">
+        <button onclick="closeVideo(event)" style="position: absolute; top: 20px; right: 30px; background: none; border: none; color: white; font-size: 30px; cursor: pointer;">&times; Close</button>
+        <div style="width: 90%; max-width: 800px; aspect-ratio: 16/9;">
+            <iframe id="promoVideo" width="100%" height="100%" src="" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen style="border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);"></iframe>
+        </div>
+    </div>
+
+    <script>
+        // Lahat ng link dito ay pinalitan ng working embed nature video para sa testing
+        const destinations = [
+            { name: "Boracay, Aklan", mood: "chill", budget: "₱5,000 - ₱10,000+", desc: "The ultimate island getaway with powdery white sand.", img: "https://context.ph/wp-content/uploads/2025/12/Boracay-shutterstock_1766920796.jpg", video_embed: "https://www.youtube.com/embed/R7OTRH5rzy8?si=GyYF5QTYuH2H_YgZ" },
+            { name: "Baguio City", mood: "chill", budget: "₱3,000 - ₱6,000", desc: "Cozy sweaters, strawberries, and pine-scented air.", img: "https://www.agoda.com/wp-content/uploads/2024/05/Philippines-Baguio-City.jpg", video_embed: "https://www.youtube.com/embed/0QO88x3lJVc?si=2nCtKsnCRKdGVCKr" },
+            { name: "El Nido, Palawan", mood: "chill", budget: "₱7,000 - ₱15,000+", desc: "Crystal clear lagoons hidden behind massive limestone cliffs.", img: "https://images.unsplash.com/photo-1518509562904-e7ef99cdcc86?w=500", video_embed: "https://www.youtube.com/embed/5myfOaVzKw0?si=eY4AtPCw65Cl6e6q" },
+            { name: "Batanes", mood: "chill", budget: "₱15,000 - ₱25,000+", desc: "Rolling hills and lighthouse views at the northern tip of PH.", img: "https://upload.wikimedia.org/wikipedia/commons/9/97/Sabtang_Batanes.jpg", video_embed: "https://www.youtube.com/embed/qelfnS0Gkvc?si=ecyzhy_c4rbqx06z" },
+
+            { name: "Siargao Island", mood: "adventure", budget: "₱6,000 - ₱12,000", desc: "Ride the Cloud 9 waves or explore the Magpupungko pools.", img: "https://images.unsplash.com/photo-1542332213-9b5a5a3fad35?w=500", video_embed: "https://www.youtube.com/embed/ycXHiVSkk1g?si=97KYhbtOA4VD70wJ" },
+            { name: "Mt. Pulag", mood: "adventure", budget: "₱3,500 - ₱5,000", desc: "Witness the breathtaking 'Sea of Clouds' after a cold hike.", img: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgccW155MWNnwPgIY1qZWGJVaAZcCqrOO8Kad10fHij6KEkuFMT1JsUVML6NszDktXW90MUsZqumb7Sctzjz3eZgTihs3IdHlIFx_rUAevNxwpX0xiqQHpLh7iwh8gH1cJwFGpAIFE7s1k/s640/IMG_6777_8_9-large.jpg", video_embed: "https://www.youtube.com/embed/obIzmdroIPk?si=GHnFOTHxOHm9IWLP" },
+            { name: "Tagaytay City, Cavite", mood: "adventure", budget: "₱2,000 - ₱4,000", desc: "A refreshing ridge view of the famous Taal Volcano and lake.", img: "https://media.tacdn.com/media/attractions-splice-spp-674x446/06/6f/44/87.jpg", video_embed: "https://www.youtube.com/embed/aHCfvDNycsU?si=sAu8NZK-nQgn78Zr" },
+            { name: "Hundred Islands, Pangasinan", mood: "adventure", budget: "₱2,500 - ₱4,500", desc: "Go island hopping across over a hundred islets in Alaminos.", img: "https://gttp.images.tshiftcdn.com/196227/x/0/embark-on-an-exciting-hundred-islands-tour-in-alaminos-city-pangasinan-province.jpg?dpr=2&height=360&quality=65", video_embed: "https://www.youtube.com/embed/7sTj2dbX8lo?si=LUY_1pMYv1OGezZu" },
+
+            { name: "Vigan City, Ilocos Sur", mood: "heritage", budget: "₱4,000 - ₱7,000", desc: "Walk through the Spanish-era streets of Calle Crisologo.", img: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgR_EikTbW6Y2jNOImlCYDOoktW1ls5e33EqWF2nLsUEOEFG4cnOYahdPQZlNSwxIIVNCkjoOzZ_5LKfOEVBC9vqrgnG4FGhyzG52WvFjieNXB8cVde9FsW1y_KnOxBwl4fpkh9UguTeHdO/s1600/vigan_city_ilocos_philippines.jpg", video_embed: "https://www.youtube.com/embed/z9t47d82Qgo?si=LPcWFGHMh_Tgqgbi" },
+            { name: "Taal, Batangas", mood: "heritage", budget: "₱1,500 - ₱3,000", desc: "Visit the massive Basilica and well-preserved ancestral houses.", img: "https://media-cdn.tripadvisor.com/media/photo-c/1280x250/06/9d/9f/c5/basilica-of-st-martin.jpg", video_embed: "https://www.youtube.com/embed/D7gqafMXb2s?si=HxgKZx1xjLFd9UY0" },
+            { name: "Intramuros, Manila", mood: "heritage", budget: "₱500 - ₱1,500", desc: "The 'Walled City' that holds the secrets of Old Manila.", img: "https://citygardensuites.com/wp-content/uploads/2025/05/image-1-1.jpg", video_embed: "https://www.youtube.com/embed/Db19KNNSWa0?si=Q39bLUQujpBVSJea" },
+            { name: "Banaue Rice Terraces", mood: "heritage", budget: "₱4,500 - ₱8,000", desc: "The 2,000-year-old 'Eighth Wonder of the World' in Ifugao.", img: "https://byunique.com/gallery/?album=1903&w=1200&h=600&crop=auto", video_embed: "https://www.youtube.com/embed/fM7Es6MWuuY?si=E_Ui7e4B7XaSaYuc" },
+
+            { name: "Iloilo City", mood: "romantic", budget: "₱3,500 - ₱6,500", desc: "Indulge in the best Batchoy and explore the scenic River Esplanade in the City of Love.", img: "https://scarletscribs.wordpress.com/wp-content/uploads/2025/05/250515-jaro-cathedral-belfry-plaza-iloilo-city-aklan-western-visayas-philippines.jpg", video_embed: "https://www.youtube.com/embed/dBov2-NNGOU?si=B3VuxEE01q6vvlyB" },
+            { name: "Albay, Bicol", mood: "majestic", budget: "₱4,000 - ₱8,000", desc: "Home to the world-famous Mayon Volcano and its near-perfect cone shape.", img: "https://ik.imagekit.io/tvlk/blog/2023/07/shutterstock_1548771623-1.jpg", video_embed: "https://www.youtube.com/embed/Xd2QDmWkTzU?si=PAtTLytkUiSjd7pM" },
+            { name: "Chocolate Hills, Bohol", mood: "majestic", budget: "₱3,500 - ₱7,000", desc: "Marvel at the geological wonder of 1,247 cone-shaped hills that turn chocolate brown during the dry season.", img: "https://media-cdn.tripadvisor.com/media/attractions-splice-spp-674x446/07/38/d7/7c.jpg", video_embed: "https://www.youtube.com/embed/3Vp8tc9EZPg?si=CzBIucJFIxideOg6" }
+        ];
+
+        function renderGrid(moodFilter = 'all') {
+            const grid = document.getElementById('places-grid');
+            grid.innerHTML = '';
+
+            const filtered = moodFilter === 'all' 
+                ? destinations 
+                : destinations.filter(d => d.mood === moodFilter);
+
+            filtered.forEach((place, index) => {
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.style.animationDelay = `${index * 0.1}s`;
+                
+                card.setAttribute('onclick', `playVideo('${place.video_embed}')`);
+
+                card.innerHTML = `
+                    <button class="wish-btn" onclick="toggleWish(event, this)">❤</button>
+                    <img src="${place.img}" alt="${place.name}">
+                    <div class="card-body">
+                        <h3>${place.name}</h3>
+                        <span class="budget-tag">Est. Budget: ${place.budget}</span>
+                        <p>${place.desc}</p>
+                        <div style="font-size: 10px; text-transform: uppercase; color: #00d2ff; opacity: 0.7;">#${place.mood}</div>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function filterMood(mood, btn) {
+            document.querySelectorAll('.mood-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            renderGrid(mood);
+        }
+
+        function toggleWish(e, btn) {
+            e.stopPropagation();
+            btn.classList.toggle('liked');
+        }
+
+        // Modal Controls
+        function playVideo(videoUrl) {
+            const modal = document.getElementById('videoModal');
+            const video = document.getElementById('promoVideo');
+            
+            video.src = `${videoUrl}?autoplay=1&rel=0`; 
+            modal.style.display = 'flex';
+        }
+
+        function closeVideo(e) {
+            if(e) e.stopPropagation();
+            const modal = document.getElementById('videoModal');
+            const video = document.getElementById('promoVideo');
+            
+            modal.style.display = 'none';
+            video.src = ""; 
+        }
+
+        // Single Dynamic Greeting Source
+        function updateGreeting() {
+            const hours = new Date().getHours();
+            const title = document.querySelector('.title-pinas');
+            if(title) {
+                const greet = hours < 12 ? "🌅 Magandang Umaga" : hours < 18 ? "☀️ Magandang Hapon" : "🌙 Magandang Gabi";
+                title.innerHTML = `${greet}, Juan!`;
+            }
+        }
+
+        // Initialize UI Elements
+        renderGrid();
+        updateGreeting();
+
+        // Spotlight Follow Core
+        document.querySelector('.app-container').onmousemove = e => {
+            const rect = e.currentTarget.getBoundingClientRect();
+            e.currentTarget.style.setProperty('--mouse-x', `${(e.clientX - rect.left)}px`);
+            e.currentTarget.style.setProperty('--mouse-y', `${(e.clientY - rect.top)}px`);
+        };
+    </script>
+</body>
+</html>
