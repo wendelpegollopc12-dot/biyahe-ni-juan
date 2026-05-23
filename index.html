@@ -606,8 +606,17 @@ function hideLocation() {
         const password = document.getElementById('password').value;
         const msgDiv = document.getElementById('message');
 
+        // 1. DITO MO I-PASTE SA LOOB NG INDEX.HTML (PALITAN ANG LUMANG TRY BLOCK)
+        if (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
+            // KUNG ONLINE (Para sa mga kaibigan mo - DIRETSO AGAD SA DASHBOARD)
+            alert("Welcome to Biyahe ni Juan! (Demo Mode Active)");
+            window.location.href = "destinations.html"; 
+            return; // Hihinto na rito para hindi mag-error online
+        }
+
+        // KUNG NASA LAPTOP MO (Gagana ang totoong MongoDB backend mo sa local presentation)
         try {
-            const response = await fetch('/api/auth/login', {
+            const response = await fetch('http://localhost:3000/api/auth/login', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ username, password })
