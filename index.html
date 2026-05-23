@@ -373,8 +373,6 @@
             </div>
 
             <div class="layout-col">
-                <p style="margin: 0 0 5px 0; font-size: 13px; color: #ccc; text-align: center; font-weight: bold;" id="map-heading">Interactive Map</p>
-                
                 <div class="hover-indicator" id="map-hover-text">Hover over the map to explore! 🗺️</div>
                 
                 <div class="map-wrapper">
@@ -459,19 +457,27 @@
 </div>
 
 <script>
-    // DYNAMIC CONTROL: Inaalam kung localhost o nasa live GitHub Pages ang gumagamit
-    const API_URL = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
-        ? 'http://localhost:3000'
-        : 'BYPASS_ONLINE';
+    // AUTOMATIC LOCALHOST IP HANDLER FOR MOBILE DEVICES
+    // Kinukuha nito ang kasalukuyang IP address o hostname kung saan binuksan ang website
+    const currentHost = window.location.hostname;
+    let API_URL;
 
-    // DATA LAYER FOR DESTINATION EXPLORATION PHOTOS
+    // Kung binuksan mo gamit ang localhost, 127.0.0.1, o IP address ng local network mo (tulad ng 192.168.x.x)
+    if (currentHost === 'localhost' || currentHost === '127.0.0.1' || currentHost.startsWith('192.168.') || currentHost.startsWith('10.') || currentHost.startsWith('172.')) {
+        // Kokonekta ito sa port 3000 ng kung anong IP address ang gamit mo ngayon para gumana ang totoong database sa phone mo!
+        API_URL = `http://${currentHost}:3000`;
+    } else {
+        // Kung nasa GitHub Pages link ka (.github.io), dito lang siya mag-a-activate ng Bypass Demo Mode
+        API_URL = 'BYPASS_ONLINE';
+    }
+
     const regionMediaData = {
         Luzon: {
             desc: "Land of heritage fields, historical trails, and soaring mountain ridges.",
             budget: "4500",
             photos: [
                 { url: "https://www.philippinesdiscovery.ph/images/philippines-tours/batad-rice-terraces-700-1.jpg", caption: "Banaue Rice Terraces — Mountain Province" },
-                { url: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/09/Calle_Crisologo%2C_Vigan%2C_Philippines_-_One_of_The_New_7_Wonder_Cities_of_The_World.jpg/1280px-Calle_Crisologo%2C_Vigan%2C_Philippines_-_One_of_The_New_7_Wonder_Cities_of_The_World.jpg?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=thumbnail", caption: "Historic Stone Architecture — Calle Crisologo, Vigan" },
+                { url: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/09/Calle_Crisologo%2C_Vigan%2C_Philippines_-_One_of_The_New_7_Wonder_Cities_of_The_World.jpg/1280px-Calle_Crisologo%2C_Vigan%2C_Philippines_-_One_of_The_New_7_Wonder_Cities_of_The_World.jpg", caption: "Historic Stone Architecture — Calle Crisologo, Vigan" },
                 { url: "https://www.travelandtourworld.com/wp-content/uploads/2026/04/volcano.jpg", caption: "Mayon Volcano — Albay, Bicol Region" }
             ]
         },
@@ -598,7 +604,6 @@
         const password = document.getElementById('password').value;
         const msgDiv = document.getElementById('message');
 
-        // SAKTO NA: Kapag online, binubuksan na nito ang mismong dashboard section nang walang redirect sa ibang page!
         if (API_URL === 'BYPASS_ONLINE') {
             alert("Welcome to Biyahe ni Juan! (Demo Mode Active)");
             localStorage.setItem('token', 'mock_online_token');
@@ -628,7 +633,7 @@
                 msgDiv.innerHTML = `<span style="color: #ff4d4d;">❌ ${data.message || "Failed"}</span>`;
             }
         } catch (err) { 
-            msgDiv.innerHTML = `<span style="color: #ff4d4d;">❌ Server error!</span>`;
+            msgDiv.innerHTML = `<span style="color: #ff4d4d;">❌ Server error! Sinusubukan kumonekta sa ${API_URL}</span>`;
         }
     }
 
@@ -810,8 +815,8 @@
     }
 
     const translations = {
-        en: { welcome: "Welcome back, Traveler!", journal: "Travel Journal", add: "Add to Journal +", explore: "Explore Places 🌟", settings: "Settings", theme: "Eye Protection Mode", lang: "Language", mapHeading: "Interactive Map" },
-        fil: { welcome: "Maligayang pagbabalik, Biyahero!", journal: "Talaarawan ng Paglalakbay", add: "Idagdag sa Journal +", explore: "Galugarin ang mga Lugar 🌟", settings: "Kasangkapan", theme: "Proteksyon sa Mata", lang: "Wika", mapHeading: "Interactive na Mapa" }
+        en: { welcome: "Welcome back, Traveler!", journal: "Travel Journal", add: "Add to Journal +", explore: "Explore Places 🌟", settings: "Settings", theme: "Eye Protection Mode", lang: "Language" },
+        fil: { welcome: "Maligayang pagbabalik, Biyahero!", journal: "Talaarawan ng Paglalakbay", add: "Idagdag sa Journal +", explore: "Galugarin ang mga Lugar 🌟", settings: "Kasangkapan", theme: "Proteksyon sa Mata", lang: "Wika" }
     };
 
     function toggleSettings() {
@@ -843,7 +848,6 @@
         document.getElementById('settings-title').innerText = t.settings;
         document.getElementById('label-theme').innerText = t.theme;
         document.getElementById('label-lang').innerText = t.lang;
-        document.getElementById('map-heading').innerText = t.mapHeading;
     }
 
     window.onload = () => {
