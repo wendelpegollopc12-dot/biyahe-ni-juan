@@ -145,6 +145,16 @@
 </div>
 
 <script>
+    // AUTOMATIC HANDLER FOR LOCAL AND LIVE DEPLOYMENT
+    const currentHost = window.location.hostname;
+    let API_URL;
+
+    if (currentHost === 'localhost' || currentHost === '127.0.0.1') {
+        API_URL = 'http://localhost:3000';
+    } else {
+        API_URL = 'https://biyahe-ni-juan-backend.onrender.com';
+    }
+
     async function register() {
         const username = document.getElementById('regUser').value;
         const password = document.getElementById('regPass').value;
@@ -156,7 +166,8 @@
         }
 
         try {
-            const response = await fetch('/api/auth/register', {
+            // Gumagamit na ngayon ng dynamic API_URL para siguradong pasok kay Render
+            const response = await fetch(`${API_URL}/api/auth/register`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ username, password })
@@ -169,10 +180,10 @@
                     window.location.href = 'index.html'; 
                 }, 1500);
             } else {
-                msgDiv.innerHTML = `<span style="color: #ff4d4d;">❌ ${data.error || "Failed"}</span>`;
+                msgDiv.innerHTML = `<span style="color: #ff4d4d;">❌ ${data.message || data.error || "Failed"}</span>`;
             }
         } catch (err) { 
-            msgDiv.innerHTML = `<span style="color: #ff4d4d;">❌ Server error!</span>`;
+            msgDiv.innerHTML = `<span style="color: #ff4d4d;">❌ Server error! Hindi makakonekta sa ${API_URL}</span>`;
         }
     }
 
