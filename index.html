@@ -5,7 +5,8 @@
     <title>Biyahe ni Juan</title>
     <style>
         body {
-            margin: 0; padding: 0; 
+            margin: 0;
+            padding: 0; 
             min-height: 100vh;
             display: flex; justify-content: center; align-items: center;
             background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), 
@@ -28,7 +29,8 @@
             animation: move 20s infinite alternate;
         }
         .blob-2 {
-            right: 10%; top: 10%;
+            right: 10%;
+            top: 10%;
             background: rgba(255, 193, 7, 0.2);
             animation-duration: 15s;
         }
@@ -55,11 +57,11 @@
             width: 420px; 
             max-width: 95%;
             max-height: 90vh; 
-            overflow-y: auto; 
+            overflow-y: auto;
             overflow-x: hidden;
             animation: containerEntry 0.6s cubic-bezier(0.22, 1, 0.36, 1);
             position: relative;
-            transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1); 
+            transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .container.dashboard-active {
@@ -97,27 +99,32 @@
         }
 
         .login-box { 
-            width: 100%; 
+            width: 100%;
             box-sizing: border-box;
         }
 
         input, select {
-            width: 100%; padding: 12px; margin: 8px 0;
+            width: 100%;
+            padding: 12px; margin: 8px 0;
             border-radius: 12px; border: 1px solid rgba(255,255,255,0.1);
             background: rgba(255, 255, 255, 0.08); color: white;
-            box-sizing: border-box; transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-sizing: border-box;
+            transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         input:focus { 
-            background: rgba(255, 255, 255, 0.15); outline: none; border-color: #00d2ff; transform: translateY(-2px); 
+            background: rgba(255, 255, 255, 0.15);
+            outline: none; border-color: #00d2ff; transform: translateY(-2px); 
             box-shadow: 0 4px 12px rgba(0, 210, 255, 0.2);
         }
 
         button {
-            width: 100%; padding: 12px;
+            width: 100%;
+            padding: 12px;
             background: linear-gradient(to right, #3a7bd5, #00d2ff);
             color: white; border: none; border-radius: 12px;
-            font-weight: bold; cursor: pointer; transition: 0.3s; margin-top: 8px;
+            font-weight: bold; cursor: pointer; transition: 0.3s;
+            margin-top: 8px;
         }
 
         button:hover { transform: translateY(-3px); box-shadow: 0 5px 15px rgba(0, 210, 255, 0.4); }
@@ -133,13 +140,14 @@
             border: 1px solid rgba(255, 255, 255, 0.05);
             display: flex;
             flex-direction: column;
-            height: 310px; 
+            height: 310px;
         }
 
         #trip-list { overflow-y: auto; overflow-x: hidden; padding-right: 5px; height: 100%; }
 
         .trip-item {
-            background: rgba(255,255,255,0.05); padding: 12px 15px; border-radius: 15px; margin-bottom: 10px;
+            background: rgba(255,255,255,0.05);
+            padding: 12px 15px; border-radius: 15px; margin-bottom: 10px;
             display: flex; justify-content: space-between; align-items: center; border: 1px solid rgba(255,255,255,0.1);
             animation: itemPop 0.5s ease-out backwards; transition: 0.3s; width: 100%; box-sizing: border-box;
         }
@@ -158,7 +166,7 @@
             display: flex;
             align-items: center;
             justify-content: space-around;
-            height: 310px; 
+            height: 310px;
             box-sizing: border-box;
             box-shadow: inset 0 0 20px rgba(0,0,0,0.6), 0 4px 15px rgba(0,0,0,0.4);
             position: relative;
@@ -223,20 +231,9 @@
             width: 100%;
             box-sizing: border-box;
         }
-        .clock-time {
-            font-size: 22px;
-            font-weight: bold;
-            color: #00d2ff;
-            letter-spacing: 1px;
-        }
-        .clock-date {
-            font-size: 11px;
-            color: #bbb;
-            margin-top: 3px;
-            text-transform: uppercase;
-        }
+        .clock-time { font-size: 22px; font-weight: bold; color: #00d2ff; letter-spacing: 1px; }
+        .clock-date { font-size: 11px; color: #bbb; margin-top: 3px; text-transform: uppercase; }
 
-        /* PREMIUM FEATURE: OVERLAY POPUP MODAL FOR IMMERSIVE PHOTOS */
         .photo-modal {
             position: fixed;
             top: 0; left: 0; width: 100vw; height: 100vh;
@@ -248,9 +245,7 @@
             opacity: 0; pointer-events: none;
             transition: opacity 0.4s ease;
         }
-        .photo-modal.show {
-            opacity: 1; pointer-events: auto;
-        }
+        .photo-modal.show { opacity: 1; pointer-events: auto; }
         .modal-content {
             background: rgba(255, 255, 255, 0.1);
             border: 1px solid rgba(255, 255, 255, 0.2);
@@ -263,43 +258,20 @@
             color: white; text-align: center;
             position: relative;
         }
-        .photo-modal.show .modal-content {
-            transform: scale(1) translateY(0);
-        }
-        .close-modal-btn {
-            position: absolute; top: 15px; right: 20px;
-            font-size: 24px; cursor: pointer; color: #aaa; transition: 0.2s;
-        }
+        .photo-modal.show .modal-content { transform: scale(1) translateY(0); }
+        .close-modal-btn { position: absolute; top: 15px; right: 20px; font-size: 24px; cursor: pointer; color: #aaa; transition: 0.2s; }
         .close-modal-btn:hover { color: #ff4d4d; }
         
-        .modal-carousel {
-            position: relative; width: 100%; height: 260px;
-            border-radius: 16px; overflow: hidden; margin-top: 15px;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.5);
-        }
-        .modal-img {
-            width: 100%; height: 100%; object-fit: cover;
-            position: absolute; top: 0; left: 0; opacity: 0;
-            transition: opacity 0.5s ease-in-out;
-        }
+        .modal-carousel { position: relative; width: 100%; height: 260px; border-radius: 16px; overflow: hidden; margin-top: 15px; box-shadow: 0 8px 24px rgba(0,0,0,0.5); }
+        .modal-img { width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0; opacity: 0; transition: opacity 0.5s ease-in-out; }
         .modal-img.active { opacity: 1; }
         
-        .carousel-btn {
-            position: absolute; top: 50%; transform: translateY(-50%);
-            background: rgba(0,0,0,0.6); color: white; border: none;
-            width: 36px; height: 36px; border-radius: 50%; cursor: pointer;
-            font-weight: bold; font-size: 16px; transition: 0.2s; z-index: 2;
-        }
+        .carousel-btn { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(0,0,0,0.6); color: white; border: none; width: 36px; height: 36px; border-radius: 50%; cursor: pointer; font-weight: bold; font-size: 16px; transition: 0.2s; z-index: 2; }
         .carousel-btn:hover { background: #00d2ff; color: black; }
         .prev-btn { left: 10px; }
         .next-btn { right: 10px; }
         
-        .modal-caption {
-            background: linear-gradient(transparent, rgba(0,0,0,0.9));
-            position: absolute; bottom: 0; left: 0; width: 100%;
-            padding: 15px 10px; box-sizing: border-box; font-size: 14px;
-            font-weight: 500; text-shadow: 0 2px 4px rgba(0,0,0,0.8);
-        }
+        .modal-caption { background: linear-gradient(transparent, rgba(0,0,0,0.9)); position: absolute; bottom: 0; left: 0; width: 100%; padding: 15px 10px; box-sizing: border-box; font-size: 14px; font-weight: 500; text-shadow: 0 2px 4px rgba(0,0,0,0.8); }
     </style>
 </head>
 <body>
@@ -457,18 +429,16 @@
 </div>
 
 <script>
-    // AUTOMATIC LOCALHOST IP HANDLER FOR MOBILE DEVICES
-    // Kinukuha nito ang kasalukuyang IP address o hostname kung saan binuksan ang website
+    // AUTOMATIC HANDLER FOR LOCAL AND LIVE DEPLOYMENT
     const currentHost = window.location.hostname;
     let API_URL;
 
-    // Kung binuksan mo gamit ang localhost, 127.0.0.1, o IP address ng local network mo (tulad ng 192.168.x.x)
-    if (currentHost === 'localhost' || currentHost === '127.0.0.1' || currentHost.startsWith('192.168.') || currentHost.startsWith('10.') || currentHost.startsWith('172.')) {
-        // Kokonekta ito sa port 3000 ng kung anong IP address ang gamit mo ngayon para gumana ang totoong database sa phone mo!
-        API_URL = `http://${currentHost}:3000`;
+    // Kung offline ka at nagte-test sa sariling computer
+    if (currentHost === 'localhost' || currentHost === '127.0.0.1') {
+        API_URL = 'http://localhost:3000';
     } else {
-        // Kung nasa GitHub Pages link ka (.github.io), dito lang siya mag-a-activate ng Bypass Demo Mode
-        API_URL = 'BYPASS_ONLINE';
+        // Kung binuksan mo na ang website sa internet (tulad ng GitHub Pages), dito na siya kokonekta sa live Render server mo!
+        API_URL = 'https://biyahe-ni-juan-backend.onrender.com';
     }
 
     const regionMediaData = {
@@ -500,7 +470,6 @@
             ]
         }
     };
-
     let activeSelectedRegion = "";
     let currentPhotoIndex = 0;
 
@@ -521,7 +490,6 @@
             img.className = `modal-img ${i === 0 ? 'active' : ''}`;
             container.appendChild(img);
         });
-        
         document.getElementById('image-caption').innerText = data.photos[0].caption;
         document.getElementById('region-photo-modal').classList.add('show');
     }
@@ -563,15 +531,15 @@
         let shadowColor = "rgba(0, 210, 255, 0.2)";
 
         if (name.includes("Luzon")) {
-            textColor = "#ffc107";   
+            textColor = "#ffc107";
             borderColor = "rgba(255, 193, 7, 0.6)";
             shadowColor = "rgba(255, 193, 7, 0.3)";
         } else if (name.includes("Visayas")) {
-            textColor = "#00d2ff";   
+            textColor = "#00d2ff";
             borderColor = "rgba(0, 210, 255, 0.6)";
             shadowColor = "rgba(0, 210, 255, 0.3)";
         } else if (name.includes("Mindanao")) {
-            textColor = "#2ecc71";   
+            textColor = "#2ecc71";
             borderColor = "rgba(46, 204, 113, 0.6)";
             shadowColor = "rgba(46, 204, 113, 0.3)";
         }
@@ -579,7 +547,6 @@
         indicator.style.color = textColor;
         indicator.style.borderColor = borderColor;
         indicator.style.boxShadow = `0 4px 15px ${shadowColor}`;
-
         if (currentLang === 'fil') {
             const cleanName = name.replace('🌾','').replace('🏖️','').replace('🏔️','').trim();
             indicator.innerHTML = `Nakaturo ka sa: <strong style="color: ${textColor}">${cleanName}</strong> (I-click para makita ang mga larawan!)`;
@@ -595,7 +562,6 @@
         indicator.style.color = "#00d2ff";
         indicator.style.borderColor = "rgba(0, 210, 255, 0.2)";
         indicator.style.boxShadow = "0 4px 15px rgba(0,0,0,0.2)";
-        
         indicator.innerText = currentLang === 'fil' ? 'Ituro ang cursor sa mapa upang mag-explore! 🗺️' : 'Hover over the map to explore! 🗺️';
     }
 
@@ -624,7 +590,6 @@
 
             if (response.ok && data.token) {
                 localStorage.setItem('token', data.token);
-                
                 document.getElementById('main-container').classList.add('dashboard-active');
                 document.getElementById('login-section').style.display = 'none';
                 document.getElementById('trip-section').style.display = 'block';
@@ -650,7 +615,6 @@
         const editId = document.getElementById('edit-id').value;
         const token = localStorage.getItem('token');
         if (!destination || !budget) return alert("Fill all fields");
-
         if (API_URL === 'BYPASS_ONLINE') {
             let onlineTrips = JSON.parse(localStorage.getItem('online_trips')) || [];
             if (editId) {
@@ -676,11 +640,10 @@
             },
             body: JSON.stringify({ destination, budget })
         });
-        
         if (res.ok) { 
             triggerMapHighlights(destination);
             resetForm(); 
-            loadTrips(); 
+            loadTrips();
         }
     }
 
@@ -716,7 +679,7 @@
         try {
             const response = await fetch(`${API_URL}/api/trips`, {
                 headers: { 'Authorization': `Bearer ${token}` }
-            }); 
+            });
             const trips = await response.json();
 
             trips.forEach((trip, index) => {
@@ -746,7 +709,6 @@
         visayas: ["antique","boracay", "cebu", "iloilo", "bohol", "chocolate", "samar", "leyte", "bacolod", "dumaguete", "siquijor", "guimaras"],
         mindanao: ["davao", "siargao", "cagayan", "camiguin", "bukidnon", "zamboanga", "surigao", "samal", "cotabato", "ilan", "sulu"]
     };
-
     function clearMapTriggers() {
         document.getElementById('svg-luzon').classList.remove('unlocked-luzon');
         document.getElementById('svg-visayas').classList.remove('unlocked-visayas');
@@ -759,12 +721,10 @@
 
     function triggerMapHighlights(destination) {
         const destLower = destination.toLowerCase();
-
         let region = null;
         if (regionKeywords.luzon.some(k => destLower.includes(k)) || destLower.includes('luzon')) region = 'luzon';
         else if (regionKeywords.visayas.some(k => destLower.includes(k)) || destLower.includes('visayas')) region = 'visayas';
         else if (regionKeywords.mindanao.some(k => destLower.includes(k)) || destLower.includes('mindanao')) region = 'mindanao';
-        
         if(!region) {
             if(destLower.length % 3 === 0) region = 'luzon';
             else if(destLower.length % 3 === 1) region = 'visayas';
@@ -797,7 +757,6 @@
 
     async function deleteTrip(id) {
         if (!confirm("Delete adventure?")) return;
-
         if (API_URL === 'BYPASS_ONLINE') {
             let onlineTrips = JSON.parse(localStorage.getItem('online_trips')) || [];
             onlineTrips = onlineTrips.filter(t => t._id !== id);
@@ -818,7 +777,6 @@
         en: { welcome: "Welcome back, Traveler!", journal: "Travel Journal", add: "Add to Journal +", explore: "Explore Places 🌟", settings: "Settings", theme: "Eye Protection Mode", lang: "Language" },
         fil: { welcome: "Maligayang pagbabalik, Biyahero!", journal: "Talaarawan ng Paglalakbay", add: "Idagdag sa Journal +", explore: "Galugarin ang mga Lugar 🌟", settings: "Kasangkapan", theme: "Proteksyon sa Mata", lang: "Wika" }
     };
-
     function toggleSettings() {
         const menu = document.getElementById('settings-menu');
         menu.style.display = menu.style.display === 'none' ? 'block' : 'none';
@@ -891,7 +849,6 @@
             second: '2-digit',
             hour12: true
         };
-        
         const optionsDate = {
             timeZone: 'Asia/Manila',
             weekday: 'long',
@@ -899,7 +856,6 @@
             month: 'long',
             day: 'numeric'
         };
-
         const ngayon = new Date();
         
         const orasPinas = ngayon.toLocaleTimeString('en-US', optionsTime);
