@@ -312,6 +312,148 @@
             align-items: center;
             gap: 5px;
         }
+
+        /* ULTRA GLASSMORPHISM AI ASSISTANT */
+        .ai-chatbot-badge {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            /* Semi-transparent gradient badge */
+            background: linear-gradient(135deg, rgba(26, 203, 152, 0.85), rgba(0, 152, 247, 0.85));
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+            z-index: 9999;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+        .ai-chatbot-badge:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 12px 32px 0 rgba(0, 152, 247, 0.4);
+        }
+        .ai-window {
+            position: fixed;
+            bottom: 100px;
+            right: 30px;
+            width: 360px;
+            max-width: 88vw;
+            height: 480px;
+            /* Ang sikat na Frosted Glass formula */
+            background: rgba(15, 23, 42, 0.45); 
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            /* Puting outline para magmukhang glass edge */
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 24px;
+            box-shadow: 0 16px 45px 0 rgba(0, 0, 0, 0.5);
+            z-index: 9999;
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        .ai-header {
+            background: rgba(255, 255, 255, 0.03);
+            padding: 16px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        }
+        .ai-messages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            scroll-behavior: smooth;
+        }
+        /* Custom Scrollbar */
+        .ai-messages::-webkit-scrollbar {
+            width: 4px;
+        }
+        .ai-messages::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 10px;
+        }
+        /* Glass Bubbles */
+        .msg-bubble {
+            padding: 12px 16px;
+            border-radius: 18px;
+            font-size: 13.5px;
+            max-width: 78%;
+            line-height: 1.5;
+        }
+        .msg-ai {
+            /* Light tint glass bubble para sa AI */
+            background: rgba(255, 255, 255, 0.05);
+            color: #f1f5f9;
+            align-self: flex-start;
+            border-top-left-radius: 4px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .msg-user {
+            /* Blue tint glass bubble para sa User */
+            background: rgba(0, 152, 247, 0.25);
+            color: #ffffff;
+            align-self: flex-end;
+            border-top-right-radius: 4px;
+            border: 1px solid rgba(0, 152, 247, 0.3);
+            box-shadow: 0 4px 15px rgba(0, 152, 247, 0.1);
+        }
+        .ai-input-area {
+            padding: 15px 20px;
+            display: flex;
+            gap: 10px;
+            background: rgba(0, 0, 0, 0.15);
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+            align-items: center;
+        }
+        .ai-input-area input {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.03) !important;
+            border: 1px solid rgba(255, 255, 255, 0.08) !important;
+            border-radius: 14px !important;
+            padding: 12px 16px !important;
+            color: #fff !important;
+            font-size: 13.5px !important;
+            margin: 0 !important;
+            outline: none;
+            transition: all 0.2s;
+        }
+        .ai-input-area input:focus {
+            border-color: rgba(26, 203, 152, 0.5) !important;
+            background: rgba(255, 255, 255, 0.06) !important;
+        }
+        .ai-input-area button {
+            background: rgba(26, 203, 152, 0.8) !important;
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(255, 255, 255, 0.1) !important;
+            color: white !important;
+            width: 42px !important;
+            height: 42px !important;
+            border-radius: 14px !important;
+            display: flex !important;
+            justify-content: center !important;
+            align-items: center !important;
+            cursor: pointer !important;
+            transition: all 0.2s !important;
+            margin: 0 !important;
+            padding: 0 !important;
+        }
+        .ai-input-area button:hover {
+            background: rgba(26, 203, 152, 1) !important;
+            transform: scale(1.05);
+        }
     </style>
 </head>
 <body>
@@ -468,6 +610,33 @@
 
     <div class="tips-container">
         <p style="margin:0;">💡 <strong>Tip for Juan:</strong> <span id="random-tip">I-update ang iyong journal pagkatapos ng gala!</span></p>
+    </div>
+</div>
+
+<!-- Modernized AI Assistant Elements -->
+<div class="ai-chatbot-badge" onclick="toggleChatbot()">💬</div>
+<div class="ai-window" id="ai-chat-window">
+    <div class="ai-header">
+        <div style="display: flex; align-items: center; gap: 10px;">
+            <div style="position: relative;">
+                <span style="font-size: 22px;">🤖</span>
+                <span style="position: absolute; bottom: 0; right: 0; width: 8px; height: 8px; background: #1acb98; border-radius: 50%; border: 2px solid #0f172a;"></span>
+            </div>
+            <div>
+                <strong style="color: #ffffff; font-size: 14px; display: block; letter-spacing: 0.5px;">Lakbay AI</strong>
+                <span style="font-size: 11px; color: #1acb98; opacity: 0.9;">Giya sa iyong Biyahe</span>
+            </div>
+        </div>
+        <span style="cursor: pointer; font-size: 18px; color: #94a3b8; transition: color 0.2s;" onclick="toggleChatbot()" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#94a3b8'">✕</span>
+    </div>
+    <div class="ai-messages" id="ai-msg-box">
+        <div class="msg-bubble msg-ai">Mabuhay, Ka-Biyahe! 🗺️ Ako ang iyong digital assistant. May maitutulong ba ako sa pagpaplano ng ruta, spots, o budget sa iyong dashboard?</div>
+    </div>
+    <div class="ai-input-area">
+        <input type="text" id="ai-user-query" placeholder="Magtanong dito..." onkeypress="if(event.key === 'Enter') sendAiMessage()">
+        <button onclick="sendAiMessage()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+        </button>
     </div>
 </div>
 
@@ -919,6 +1088,76 @@
 
     updatePhilippineTime();
     setInterval(updatePhilippineTime, 1000);
+
+    // LAKBAY AI ASSISTANT LOGIC
+    function toggleChatbot() {
+        const win = document.getElementById('ai-chat-window');
+        if (win.style.display === 'flex') {
+            win.style.display = 'none';
+        } else {
+            win.style.display = 'flex';
+            const msgBox = document.getElementById('ai-msg-box');
+            msgBox.scrollTop = msgBox.scrollHeight;
+        }
+    }
+
+    function sendAiMessage() {
+        const inputField = document.getElementById('ai-user-query');
+        const query = inputField.value.trim();
+        if (!query) return;
+
+        // Display user message
+        appendChatBubble(query, 'user');
+        inputField.value = "";
+
+        // Trigger AI thinking effect
+        setTimeout(() => {
+            const reply = generateAiReply(query.toLowerCase());
+            appendChatBubble(reply, 'ai');
+        }, 600);
+    }
+
+    function appendChatBubble(text, sender) {
+        const msgBox = document.getElementById('ai-msg-box');
+        const bubble = document.createElement('div');
+        bubble.className = `msg-bubble msg-${sender}`;
+        bubble.innerText = text;
+        msgBox.appendChild(bubble);
+        msgBox.scrollTop = msgBox.scrollHeight;
+    }
+
+    function generateAiReply(input) {
+        // AI Knowledge mapping & matching
+        if (input.includes('hello') || input.includes('hi') || input.includes('kamusta')) {
+            return "Hey there, ka-biyahe! Ayos naman ako. Handa ka na bang mag-explore sa Pilipinas? Saan mo gustong pumunta ngayon?";
+        }
+        if (input.includes('luzon')) {
+            return "Sa Luzon, napakagandang bisitahin ang Banaue Rice Terraces, makasaysayang Calle Crisologo sa Vigan, o ang Bulkang Mayon sa Albay! Click mo lang yung Luzon sa map widget para sa detalye.";
+        }
+        if (input.includes('visayas')) {
+            return "Visayas? Swak dyan ang Boracay para sa beaches, Chocolate Hills sa Bohol, o ang marine sanctuaries sa Cebu! Sulit ang adventure dyan.";
+        }
+        if (input.includes('mindanao')) {
+            return "Mindanao features high-tier beauty! Pwede ka mag-surf sa Siargao, makita ang Aliwagwag Falls sa Davao, o akyatin ang Mount Apo. Perfect sa mga nature-lovers.";
+        }
+        if (input.includes('budget') || input.includes('pera') || input.includes('magkano')) {
+            return "Tip sa Budget: Mas nakakatipid kung magbu-book nang maaga! Ang aming automatic calculation ay nag-a-allocate ng around ₱4,500 sa Luzon hanggang ₱8,000 sa Mindanao depende sa rides at spots.";
+        }
+        if (input.includes('salamat') || input.includes('thank you')) {
+            return "Walang anuman, Juan! Palaging tandaan: Ang ligtas na biyahe ay nagsisimula sa magandang plano. Enjoy coding and exploring!";
+        }
+        if (input.includes('weather') || input.includes('panahon')) {
+            return "Hindi ko pa live na nakikita ang panahon, pero siguraduhing magdala ng payong o sunscreen bago bumiyahe! Laging mag-check sa PAGASA updates.";
+        }
+        
+        // Default generic smart backup replies
+        const defaultReplies = [
+            "Magandang punto yan! Subukan mong i-click ang interactive map sa dashboard para awtomatikong mag-set ng budget at makita ang magagandang spots.",
+            "Hmm, kawili-wiling tanong! Tandaan na maaari mong i-save ang iyong mga pangarap na destinasyon gamit ang Travel Journal section sa kaliwa.",
+            "Pasensya na, medyo bago pa lang ang aking AI system para sa partikular na detalye na yan. Pero subukan mong i-explore ang Luzon, Visayas, o Mindanao sa dashboard natin!"
+        ];
+        return defaultReplies[Math.floor(Math.random() * defaultReplies.length)];
+    }
 </script>
 </body>
 </html>

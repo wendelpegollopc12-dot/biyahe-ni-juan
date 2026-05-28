@@ -145,6 +145,172 @@
             background: radial-gradient(600px circle at var(--mouse-x) var(--mouse-y), rgba(0, 210, 255, 0.15), transparent 40%);
             z-index: 1; pointer-events: none;
         }
+
+        /* RPG/VISUAL NOVEL STYLE CHARACTER PRESENTATION */
+        .game-presentation-layer {
+            position: fixed;
+            bottom: 0;
+            right: -400px; /* Nakatago muna sa labas ng screen */
+            width: 380px;
+            height: auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            z-index: 10000;
+            pointer-events: none;
+            transition: right 0.8s cubic-bezier(0.19, 1, 0.22, 1); /* Swabeng slide-in effect */
+        }
+        .game-presentation-layer.slide-in {
+            right: 20px; /* Papasok sa screen */
+        }
+        
+        /* MAS MALAKING CHARACTER PORTRAIT BOX */
+        .char-portrait-wrapper {
+            width: 340px;  /* Mula sa 280px, ginawa nating 340px para mas malapad ka */
+            height: 460px; /* Mula sa 380px, ginawa nating 460px para mas mataas at malaki */
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            overflow: visible;
+            pointer-events: auto;
+        }
+        .char-image {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            filter: drop-shadow(0 15px 25px rgba(0,0,0,0.6));
+            animation: charFloat 4s ease-in-out infinite; /* Humihingang epekto parang sa laro */
+        }
+
+        /* Presentation Dialog Box */
+        .char-dialog-box {
+            background: rgba(10, 18, 32, 0.65);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(26, 203, 152, 0.3);
+            border-radius: 20px;
+            padding: 20px;
+            color: #fff;
+            width: 100%;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+            pointer-events: auto;
+            transform: translateY(50px);
+            opacity: 0;
+            transition: all 0.5s ease 0.4s; /* Papasok pagkatapos ng tao */
+            margin-bottom: 25px;
+        }
+        /* RPG GAME STYLE - SIDE BY SIDE SIDE PRESENTATION */
+        .game-presentation-layer {
+            position: fixed;
+            bottom: 0;
+            right: -600px; /* Nakatago muna sa labas ng screen */
+            width: auto;
+            display: flex;
+            align-items: flex-end; /* Pantay sa ilalim */
+            gap: 10px;
+            z-index: 10000;
+            pointer-events: none;
+            transition: right 0.8s cubic-bezier(0.19, 1, 0.22, 1);
+        }
+        .game-presentation-layer.slide-in {
+            right: 20px; /* Papasok nang buo */
+        }
+        
+        /* Ang Presentation Dialog Box (Nasa Kaliwa ngayon) */
+        .char-dialog-box {
+            background: rgba(10, 18, 32, 0.75);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(26, 203, 152, 0.3);
+            border-radius: 20px;
+            padding: 20px;
+            color: #fff;
+            width: 320px; /* May permanenteng lapad para sa sulat */
+            box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+            pointer-events: auto;
+            margin-bottom: 30px; /* Itataas kaunti para maganda tingnan */
+            opacity: 0;
+            transform: translateX(-30px);
+            transition: all 0.5s ease 0.4s;
+        }
+        .game-presentation-layer.slide-in .char-dialog-box {
+            opacity: 1;
+            transform: translateX(0);
+        }
+        .char-name-tag {
+            background: linear-gradient(135deg, #1acb98, #0098f7);
+            color: white;
+            padding: 4px 14px;
+            border-radius: 8px;
+            font-size: 11px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: inline-block;
+            margin-bottom: 10px;
+            box-shadow: 0 4px 12px rgba(26, 203, 152, 0.3);
+        }
+        .char-text {
+            font-size: 13.5px;
+            line-height: 1.6;
+            color: #e2e8f0;
+            margin: 0;
+        }
+        .char-close-btn {
+            float: right;
+            cursor: pointer;
+            color: rgba(255,255,255,0.4);
+            font-size: 12px;
+            transition: color 0.2s;
+            font-weight: bold;
+        }
+        .char-close-btn:hover {
+            color: #ff4a4a;
+        }
+
+        /* Ang Malaking Larawan Mo (Nasa Kanan ngayon) */
+        .char-portrait-wrapper {
+            width: 300px;  /* Tamang lapad para sa photo mo */
+            height: 450px; /* Tamang taas para malaki ka tingnan */
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            overflow: visible;
+            pointer-events: auto;
+        }
+        .char-image {
+            width: 100%;
+            height: 100%;
+            object-fit: contain; /* Para hindi ma-stretch ang mukha mo */
+            filter: drop-shadow(0 15px 25px rgba(0,0,0,0.6));
+            animation: charFloat 4s ease-in-out infinite;
+        }
+
+        @keyframes charFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+
+        /* Mobile Responsive adjustment para hindi masira sa CP mo */
+        @media (max-width: 600px) {
+            .game-presentation-layer {
+                flex-direction: column-reverse; /* Ibabalik sa patayo kapag maliit ang screen */
+                align-items: center;
+                width: 100%;
+                right: -100%;
+            }
+            .game-presentation-layer.slide-in {
+                right: 0;
+            }
+            .char-dialog-box {
+                width: 85vw;
+                margin-bottom: 10px;
+            }
+            .char-portrait-wrapper {
+                width: 200px;
+                height: 300px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -182,6 +348,19 @@
             <iframe id="promoVideo" width="100%" height="100%" src="" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen style="border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);"></iframe>
         </div>
     </div>
+
+    <div class="game-presentation-layer" id="presentation-character">
+    <div class="char-portrait-wrapper">
+        <img src="1000090375-removebg-preview.png" class="char-image" alt="Guide Juan">
+    </div>
+    <div class="char-dialog-box">
+        <span class="char-close-btn" onclick="dismissPresentation()">✕ HIDE</span>
+        <div class="char-name-tag">Guide Juan</div>
+        <p class="char-text">
+            Mabuhay at maligayang pagdating sa <strong>Destinations Panel</strong>! ✈️ Ako ang iyong gabay. Dito mo masusuri nang malaliman ang mga pinili mong ruta, mada-download ang iyong itinerary, at makikita ang kalkulasyon ng iyong biyahe. Handa ka na ba?
+        </p>
+    </div>
+</div>
 
     <script>
         // Lahat ng link dito ay pinalitan ng working embed nature video para sa testing
@@ -284,6 +463,49 @@
             e.currentTarget.style.setProperty('--mouse-x', `${(e.clientX - rect.left)}px`);
             e.currentTarget.style.setProperty('--mouse-y', `${(e.clientY - rect.top)}px`);
         };
+
+        // FLOATING TOUR GUIDE INITIALIZATION
+    document.addEventListener("DOMContentLoaded", () => {
+        const guide = document.getElementById("tour-guide-character");
+        const bubble = document.getElementById("welcome-bubble");
+
+        // Hakbang 1: Papasukin ang karakter pagkatapos ng 1 segundo
+        setTimeout(() => {
+            guide.classList.add("active");
+        }, 1000);
+
+        // Hakbang 2: Papasukin ang speech bubble pagkatapos ng 1.8 segundo
+        setTimeout(() => {
+            bubble.classList.add("active");
+        }, 1800);
+
+        // Hakbang 3: Kusang itago ang text bubble pagkalipas ng 7 segundo para hindi makaharang
+        setTimeout(() => {
+            bubble.classList.remove("active");
+        }, 8500);
+    });
+
+    // GAME-STYLE CHARACTER PRESENTATION LOGIC
+    document.addEventListener("DOMContentLoaded", () => {
+        const presentationLayer = document.getElementById("presentation-character");
+        
+        // Mag-slide in ang karakter pagkatapos ng 1.2 segundo
+        setTimeout(() => {
+            presentationLayer.classList.add("slide-in");
+        }, 1200);
+        
+        // (Optional) Kung gusto mong kusa siyang umalis pagkalipas ng 12 segundo, i-uncomment ang code sa ibaba:
+        /*
+        setTimeout(() => {
+            dismissPresentation();
+        }, 12000);
+        */
+    });
+
+    function dismissPresentation() {
+        const presentationLayer = document.getElementById("presentation-character");
+        presentationLayer.classList.remove("slide-in");
+    }
     </script>
 </body>
 </html>
