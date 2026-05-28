@@ -368,10 +368,11 @@
         <span class="char-close-btn" onclick="dismissPresentation()">✕ HIDE</span>
         <div class="char-name-tag">Guide Juan</div>
         <p class="char-text">
-            Mabuhay at maligayang pagdating sa <strong>Destinations Panel</strong>! ✈️ Ako ang iyong gabay. Dito mo masusuri nang malaliman ang mga pinili mong ruta, mada-download ang iyong itinerary, at makikita ang kalkulasyon ng iyong biyahe. Handa ka na ba?
+            Mabuhay at maligayang pagdating sa <strong>Destinations Panel</strong>! ✈️ Ako ang iyong gabay. Dito makikita natin ang mga kamangha-manghang lugar sa Pilipinas, para maka pag-bigay ng impormasyon sa lugar na nais mong puntahan. Handa ka na ba?
         </p>
     </div>
 </div>
+
 
     <script>
         // Lahat ng link dito ay pinalitan ng working embed nature video para sa testing
@@ -506,17 +507,18 @@
         }, 1200);
         
         // (Optional) Kung gusto mong kusa siyang umalis pagkalipas ng 12 segundo, i-uncomment ang code sa ibaba:
-        /*
+        
         setTimeout(() => {
             dismissPresentation();
         }, 12000);
-        */
+        
     });
 
     function dismissPresentation() {
         const presentationLayer = document.getElementById("presentation-character");
         presentationLayer.classList.remove("slide-in");
     }
+
     </script>
 </body>
 </html>
