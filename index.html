@@ -291,7 +291,6 @@
             position: absolute; bottom: 0; left: 0; width: 100%; padding: 15px 10px; box-sizing: border-box; font-size: 14px; font-weight: 500;
             text-shadow: 0 2px 4px rgba(0,0,0,0.8); }
 
-        /* Elegant at maliit na header space para sa greeting */
         .header-area {
             display: flex;
             justify-content: space-between;
@@ -313,7 +312,6 @@
             gap: 5px;
         }
 
-        /* ULTRA GLASSMORPHISM AI ASSISTANT */
         .ai-chatbot-badge {
             position: fixed;
             bottom: 30px;
@@ -523,6 +521,9 @@
                     <input type="hidden" id="edit-id">
                     <input type="text" id="dest" placeholder="Where to? (e.g. Baguio)">
                     <input type="number" id="budget" placeholder="Budget (PHP)">
+                    
+                    <!-- HETO ANG BAGONG INPUT PARA SA PETSA NG GALA NG USER -->
+                    <input type="date" id="travelDate" title="Date of Travel" style="width: 100%; box-sizing: border-box;">
                     
                     <button id="main-btn" onclick="saveTrip()" style="background: #28a745; margin-top: 10px;">Add to Journal +</button>
                     <button id="cancel-btn" onclick="resetForm()" style="display:none; background: #6c757d; margin-top: 5px;">Cancel Edit</button>
@@ -785,7 +786,7 @@
             localStorage.setItem('token', 'mock_online_token');
             localStorage.setItem('username', username); 
             document.getElementById('user-greeting').innerText = username;
-            document.getElementById('user-display-badge').style.display = 'inline-flex'; // Ipakita ang badge
+            document.getElementById('user-display-badge').style.display = 'inline-flex';
             document.getElementById('main-container').classList.add('dashboard-active');
             document.getElementById('login-section').style.display = 'none';
             document.getElementById('trip-section').style.display = 'block';
@@ -805,7 +806,7 @@
                 localStorage.setItem('token', data.token);
                 localStorage.setItem('username', username); 
                 document.getElementById('user-greeting').innerText = username;
-                document.getElementById('user-display-badge').style.display = 'inline-flex'; // Ipakita ang badge
+                document.getElementById('user-display-badge').style.display = 'inline-flex';
                 
                 document.getElementById('main-container').classList.add('dashboard-active');
                 document.getElementById('login-section').style.display = 'none';
@@ -828,40 +829,60 @@
     }
 
     async function saveTrip() {
+        const editId = document.getElementById('edit-id').value;
         const destination = document.getElementById('dest').value;
         const budget = document.getElementById('budget').value;
-        const editId = document.getElementById('edit-id').value;
-        const token = localStorage.getItem('token');
-        if (!destination || !budget) return alert("Fill all fields");
+        const travelDate = document.getElementById('travelDate').value; 
+
+        if (!destination || !budget || !travelDate) {
+            alert("⚠️ Paki-sagutan ang lahat ng fields kasama ang Date of Travel!");
+            return;
+        }
+
+        const tripData = {
+            destination: destination,
+            budget: budget,
+            travelDate: travelDate 
+        };
+
         if (API_URL === 'BYPASS_ONLINE') {
             let onlineTrips = JSON.parse(localStorage.getItem('online_trips')) || [];
             if (editId) {
-                onlineTrips = onlineTrips.map(t => t._id === editId ? { _id: editId, destination, budget } : t);
+                onlineTrips = onlineTrips.map(t => t._id === editId ? { ...t, destination, budget, travelDate } : t);
             } else {
-                onlineTrips.push({ _id: 'local_' + Date.now(), destination, budget });
+                onlineTrips.unshift({ _id: 'mock_' + Date.now(), destination, budget, travelDate });
             }
             localStorage.setItem('online_trips', JSON.stringify(onlineTrips));
-            triggerMapHighlights(destination);
-            resetForm(); 
+            alert("✅ Journal updated successfully!");
+            resetForm();
             loadTrips();
             return;
         }
 
-        const method = editId ? 'PUT' : 'POST';
         const url = editId ? `${API_URL}/api/trips/${editId}` : `${API_URL}/api/trips`;
+        const method = editId ? 'PUT' : 'POST';
 
-        const res = await fetch(url, {
-            method: method,
-            headers: { 
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-            },
-            body: JSON.stringify({ destination, budget })
-        });
-        if (res.ok) { 
-            triggerMapHighlights(destination);
-            resetForm(); 
-            loadTrips();
+        try {
+            const response = await fetch(url, {
+                method: method,
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('token')}` 
+                },
+                body: JSON.stringify(tripData)
+            });
+
+            if (response.ok) {
+                alert("✅ Journal updated successfully!");
+                resetForm(); 
+                loadTrips(); 
+            } else {
+                const errorData = await response.json();
+                alert(`❌ Failed to save: ${errorData.message}`);
+            }
+        } catch (err) {
+            console.error("Error saving trip:", err);
+            alert("❌ Hindi makakonekta sa server.");
         }
     }
 
@@ -876,14 +897,21 @@
             trips.forEach((trip, index) => {
                 triggerMapHighlights(trip.destination);
                 const delay = index * 0.05;
+                
+                // I-format ang date para maging kaaya-ayang basahin (e.g., June 1, 2026)
+                const formattedDate = trip.travelDate ? new Date(trip.travelDate).toLocaleDateString('en-US', {
+                    year: 'numeric', month: 'long', day: 'numeric'
+                }) : 'No Date Set';
+
                 listDiv.innerHTML += `
                     <div class="trip-item" style="animation-delay: ${delay}s">
                         <div>
                             <strong style="color: #00d2ff;">📍 ${trip.destination}</strong><br>
-                            <small>₱${trip.budget}</small>
+                            <small>₱${Number(trip.budget).toLocaleString()}</small><br>
+                            <small style="color: #ffc107; font-size: 11px;">📅 ${formattedDate}</small>
                         </div>
-                        <div style="display:flex; gap:5px;">
-                            <button onclick="prepareEdit('${trip._id}', '${trip.destination}', '${trip.budget}')" style="width: auto; background: #ffc107; color: black; padding: 6px 10px; font-size: 11px; margin: 0;">✏️</button>
+                        <div style="display:flex; gap:5px; align-items: center;">
+                            <button onclick="prepareEdit('${trip._id}', '${trip.destination}', '${trip.budget}', '${trip.travelDate || ''}')" style="width: auto; background: #ffc107; color: black; padding: 6px 10px; font-size: 11px; margin: 0;">✏️</button>
                             <button onclick="deleteTrip('${trip._id}')" style="width: auto; background: #ff4d4d; padding: 6px 10px; font-size: 11px; margin: 0;">🗑️</button>
                         </div>
                     </div>
@@ -900,16 +928,21 @@
 
             trips.forEach((trip, index) => {
                 triggerMapHighlights(trip.destination);
-
                 const delay = index * 0.05;
+                
+                const formattedDate = trip.travelDate ? new Date(trip.travelDate).toLocaleDateString('en-US', {
+                    year: 'numeric', month: 'long', day: 'numeric'
+                }) : 'No Date Set';
+
                 listDiv.innerHTML += `
                     <div class="trip-item" style="animation-delay: ${delay}s">
                         <div>
                             <strong style="color: #00d2ff;">📍 ${trip.destination}</strong><br>
-                            <small>₱${trip.budget}</small>
+                            <small>₱${Number(trip.budget).toLocaleString()}</small><br>
+                            <small style="color: #ffc107; font-size: 11px;">📅 ${formattedDate}</small>
                         </div>
-                        <div style="display:flex; gap:5px;">
-                            <button onclick="prepareEdit('${trip._id}', '${trip.destination}', '${trip.budget}')" style="width: auto; background: #ffc107; color: black; padding: 6px 10px; font-size: 11px; margin: 0;">✏️</button>
+                        <div style="display:flex; gap:5px; align-items: center;">
+                            <button onclick="prepareEdit('${trip._id}', '${trip.destination}', '${trip.budget}', '${trip.travelDate || ''}')" style="width: auto; background: #ffc107; color: black; padding: 6px 10px; font-size: 11px; margin: 0;">✏️</button>
                             <button onclick="deleteTrip('${trip._id}')" style="width: auto; background: #ff4d4d; padding: 6px 10px; font-size: 11px; margin: 0;">🗑️</button>
                         </div>
                     </div>
@@ -952,9 +985,17 @@
         }
     }
 
-    function prepareEdit(id, dest, budget) {
+    function prepareEdit(id, dest, budget, date) {
         document.getElementById('dest').value = dest;
         document.getElementById('budget').value = budget;
+        
+        if (date) {
+            // Kinukuha ang YYYY-MM-DD format para pumasok sa date input element
+            document.getElementById('travelDate').value = date.split('T')[0]; 
+        } else {
+            document.getElementById('travelDate').value = '';
+        }
+
         document.getElementById('edit-id').value = id;
         document.getElementById('main-btn').innerText = "Update Entry";
         document.getElementById('main-btn').style.background = "#007bff";
@@ -964,6 +1005,7 @@
     function resetForm() {
         document.getElementById('dest').value = '';
         document.getElementById('budget').value = '';
+        document.getElementById('travelDate').value = ''; 
         document.getElementById('edit-id').value = '';
         document.getElementById('main-btn').innerText = "Add to Journal +";
         document.getElementById('main-btn').style.background = "#28a745";
@@ -1025,6 +1067,11 @@
     }
 
     window.onload = () => {
+        // Opsyonal: Nililimitahan ang calendar input para hindi makapili ng nakalipas na araw
+        if (document.getElementById('travelDate')) {
+            document.getElementById('travelDate').min = new Date().toISOString().split("T")[0];
+        }
+
         const savedLang = localStorage.getItem('lang') || 'en';
         document.getElementById('lang-select').value = savedLang;
         applyLanguage(savedLang);
@@ -1039,7 +1086,7 @@
             const savedUsername = localStorage.getItem('username');
             if (savedUsername) {
                 document.getElementById('user-greeting').innerText = savedUsername;
-                document.getElementById('user-display-badge').style.display = 'inline-flex'; // Ipakita ang badge kapag may active session
+                document.getElementById('user-display-badge').style.display = 'inline-flex';
             }
             
             document.getElementById('main-container').classList.add('dashboard-active');
@@ -1107,11 +1154,9 @@
         const query = inputField.value.trim();
         if (!query) return;
 
-        // Display user message
         appendChatBubble(query, 'user');
         inputField.value = "";
 
-        // Trigger AI thinking effect
         setTimeout(() => {
             const reply = generateAiReply(query.toLowerCase());
             appendChatBubble(reply, 'ai');
@@ -1128,34 +1173,161 @@
     }
 
     function generateAiReply(input) {
-        // AI Knowledge mapping & matching
-        if (input.includes('hello') || input.includes('hi') || input.includes('kamusta')) {
-            return "Hey there, ka-biyahe! Ayos naman ako. Handa ka na bang mag-explore sa Pilipinas? Saan mo gustong pumunta ngayon?";
+        // I-clean ang input para walang sabit sa spaces at capitalization
+        const cleanInput = input.toLowerCase().trim();
+
+        // ==========================================
+        // 1. GREETINGS, KAMUSTAHAN, O CHILL TALK
+        // ==========================================
+        if (cleanInput.includes('hello') || cleanInput.includes('hi') || cleanInput.includes('kamusta') || cleanInput.includes('wazzup') || cleanInput.includes('hoy')) {
+            const greetings = [
+                "Hey there, ka-biyahe! Ayos naman ako, laging ready mag-gala. Handa ka na bang mag-explore sa Pilipinas? Saan mo gustong pumunta ngayon?",
+                "Uy hello! Sakto ang dating mo, nag-e-empake lang ako ng virtual luggage ko. Saan ang biyahe natin ngayon?",
+                "Mabuhay, ka-biyahe! Lakbay AI sa iyong serbisyo. Handa ka na ba sa susunod na adventure?"
+            ];
+            return greetings[Math.floor(Math.random() * greetings.length)];
         }
-        if (input.includes('luzon')) {
+
+        if (cleanInput.includes('gawin mo') || cleanInput.includes('tulong') || cleanInput.includes('help') || cleanInput.includes('features')) {
+            return "Marami akong kayang gawin! Pwede mo akong tanungin tungkol sa Luzon, Visayas, Mindanao, mga sikat na pagkain, budget tips, kailan magandang bumiyahe, o kaya humingi ng travel joke at hugot! Subukan mo.";
+        }
+
+        // ==========================================
+        // 2. REHIYON AT MGA SPECIFIC HOTSPOTS
+        // ==========================================
+        // LUZON MAIN
+        if (cleanInput.includes('luzon')) {
             return "Sa Luzon, napakagandang bisitahin ang Banaue Rice Terraces, makasaysayang Calle Crisologo sa Vigan, o ang Bulkang Mayon sa Albay! Click mo lang yung Luzon sa map widget para sa detalye.";
         }
-        if (input.includes('visayas')) {
-            return "Visayas? Swak dyan ang Boracay para sa beaches, Chocolate Hills sa Bohol, o ang marine sanctuaries sa Cebu! Sulit ang adventure dyan.";
+        // BAGUIO & TAGAYTAY (CULTURE O MALAMIG)
+        if (cleanInput.includes('baguio') || cleanInput.includes('tagaytay') || cleanInput.includes('malamig')) {
+            return "Gusto mo ng malamig na klima? Swak sa Baguio para sa Strawberry Farm at Burnham Park, o Tagaytay para sa view ng Taal Volcano habang kumakain ng mainit na Bulalo! Magdala ng jacket, bro.";
         }
-        if (input.includes('mindanao')) {
-            return "Mindanao features high-tier beauty! Pwede ka mag-surf sa Siargao, makita ang Aliwagwag Falls sa Davao, o akyatin ang Mount Apo. Perfect sa mga nature-lovers.";
+        // PALAWAN & BATANES (BUCKET LIST)
+        if (cleanInput.includes('palawan') || cleanInput.includes('batanes') || cleanInput.includes('coron') || cleanInput.includes('elnido')) {
+            return "Wow, ultimate bucket list! Sa Palawan nandoon ang El Nido, Coron, at Underground River na kilala sa buong mundo. Sa Batanes naman, parang nasa ibang mundo ka dahil sa Marlboro Hills at Ivatan stone houses. Medyo may kamahalan ang pamasahe pero super worth it!";
         }
-        if (input.includes('budget') || input.includes('pera') || input.includes('magkano')) {
-            return "Tip sa Budget: Mas nakakatipid kung magbu-book nang maaga! Ang aming automatic calculation ay nag-a-allocate ng around ₱4,500 sa Luzon hanggang ₱8,000 sa Mindanao depende sa rides at spots.";
+
+        // VISAYAS MAIN
+        if (cleanInput.includes('visayas')) {
+            return "Visayas? Swak dyan ang Boracay para sa white beach, Chocolate Hills sa Bohol, masasarap na pagkain sa Iloilo, o ang marine sanctuaries sa Cebu! Sulit ang adventure dyan.";
         }
-        if (input.includes('salamat') || input.includes('thank you')) {
-            return "Walang anuman, Juan! Palaging tandaan: Ang ligtas na biyahe ay nagsisimula sa magandang plano. Enjoy coding and exploring!";
+        // CEBU & BOHOL
+        if (cleanInput.includes('cebu') || cleanInput.includes('bohol') || cleanInput.includes('chocolate hills')) {
+            return "Perfect combo ang Cebu at Bohol! Sa Cebu, must-try ang Canyoneering sa Badian at pagbisita sa Magellan's Cross. Pagkatapos, isang mabilis na ferry lang papuntang Bohol para makita ang mga Tarsier at Chocolate Hills!";
         }
-        if (input.includes('weather') || input.includes('panahon')) {
-            return "Hindi ko pa live na nakikita ang panahon, pero siguraduhing magdala ng payong o sunscreen bago bumiyahe! Laging mag-check sa PAGASA updates.";
+        // ILOILO & BORACAY
+        if (cleanInput.includes('iloilo') || cleanInput.includes('antique') || cleanInput.includes('boracay')) {
+            return "Kung mahilig ka sa beach at heritage, takbo na sa Boracay para sa pinong buhangin! Pagkatapos, dumaan ka sa Iloilo para sa naglalakihang lumang simbahan at siyempre, ang walang kapantay na La Paz Batchoy!";
         }
-        
-        // Default generic smart backup replies
+
+        // MINDANAO MAIN
+        if (cleanInput.includes('mindanao')) {
+            return "Mindanao features high-tier beauty! Pwede ka mag-surf sa Cloud 9 sa Siargao, makita ang Philippine Eagle sa Davao, o akyatin ang Mount Apo. Perfect sa mga nature-lovers.";
+        }
+        // SIARGAO (SURFING)
+        if (cleanInput.includes('siargao') || cleanInput.includes('surf') || cleanInput.includes('surfing')) {
+            return "Siargao is calling! 🏄‍♂️ Bukod sa world-class surfing waves sa Cloud 9, napakaganda rin sa Magpupungko Rock Pools at Sugba Lagoon. Sobrang chill ng island vibe doon, baka ayaw mo na umuwi!";
+        }
+        // DAVAO & CAMIGUIN
+        if (cleanInput.includes('davao') || cleanInput.includes('camiguin') || cleanInput.includes('bukidnon')) {
+            return "Para sa eco-adventure, maganda sa Bukidnon para sa pine trees at extreme ziplines. Sa Davao naman ang Mount Apo at masasarap na prutas. Kung gusto mo ng bulkan at hot springs, rekta ka sa Camiguin—'The Island Born of Fire'!";
+        }
+
+        if (cleanInput.includes('budget') || cleanInput.includes('pera') || cleanInput.includes('magkano') || cleanInput.includes('piso fare') || cleanInput.includes('tipid')) {
+            return "Tip sa Budget: Mas nakakatipid kung magbu-book nang maaga at mag-aabang ng Piso Fare! Ang aming automatic calculation ay nag-a-allocate ng around ₱4,500 sa Luzon hanggang ₱8,000 sa Mindanao depende sa rides at spots. Laging magtabi ng emergency cash!";
+        }
+
+        if (cleanInput.includes('dala') || cleanInput.includes('gamit') || cleanInput.includes('bag') || cleanInput.includes('packing') || cleanInput.includes('damit')) {
+            return "Travel Light Checklist: 1. Powerbank at Chargers (essential!), 2. Valid IDs, 3. Extra cash (maraming island walang ATM), 4. First-aid kit/gamot, at 5. Dry bag para sa gadgets mo tuwing island hopping. Huwag magdala ng buong bahay, bro!";
+        }
+
+        if (cleanInput.includes('solo') || cleanInput.includes('mag-isa')) {
+            return "Solo travel? Matindi 'yan! Napakagandang paraan para mahanap ang sarili. Safe at subok na para sa mga solo travelers ang Sagada, Baguio, o El Nido. Madaling makipag-kaibigan sa mga hostel doon!";
+        }
+
+        if (cleanInput.includes('barkada') || cleanInput.includes('tropa') || cleanInput.includes('friends') || cleanInput.includes('grupo')) {
+            return "Barkada trip! Siguraduhin lang na hindi drawing 'to ah? 🎨 Maganda sa Zambales o Batangas para sa beach camping, o kaya Cebu road trip! Mas marami kayo, mas malaki ang matitipid sa accommodation at arkila ng sasakyan.";
+        }
+
+        if (cleanInput.includes('date') || cleanInput.includes('jowa') || cleanInput.includes('couple') || cleanInput.includes('romantic') || cleanInput.includes('kasama ko')) {
+            return "Ui, ka-romantic! 😍 Kung gusto mo ng sweet at chill, dalhin mo si jowa sa Batanes, sa sunset ng Boracay, o mag-dinner kayo sa mga cliffside restaurants sa Tagaytay habang malamig ang simoy ng hangin.";
+        }
+
+        // ==========================================
+        if (cleanInput.includes('pagkain') || cleanInput.includes('kain') || cleanInput.includes('masarap') || cleanInput.includes('food') || cleanInput.includes('gutom')) {
+            return "Naku, pagdating sa pagkain, huwag palampasin ang Bagnet sa Ilocos, La Paz Batchoy sa Iloilo, Lechon sa Cebu, at Durian sa Davao! Ano ang paborito mong Pinoy food?";
+        }
+
+        if (cleanInput.includes('pasalubong') || cleanInput.includes('regalo') || cleanInput.includes('bili')) {
+            return "Huwag uuwi nang walang pasalubong! Kung galing ka sa Norte, kumuha ka ng Chichacorn o Longganisa. Kung sa Visayas, paborito ang Otap, Piaya, o Tuyong Danggit. Sa Mindanao naman, Pastel rolls o Durian candy ang patok!";
+        }
+
+        // ==========================================
+        if (cleanInput.includes('byahe') || cleanInput.includes('sakay') || cleanInput.includes('paano pumunta') || cleanInput.includes('transport') || cleanInput.includes('eroplano') || cleanInput.includes('bus')) {
+            return "Para sa malalayong isla, Cebu Pacific at Philippine Airlines ang go-to flights natin. Kung island hopping sa Visayas, marami tayong fast craft (RoRo). Huwag ding kalilimutan ang classic Pinoy Jeepney at Tricycle ride para sa authentic experience!";
+        }
+
+        if (cleanInput.includes('road trip') || cleanInput.includes('drive') || cleanInput.includes('kotse')) {
+            return "Road trip ba? Masaya 'yan pa-Norte via TPLEX (Vigan/Pari-pari sa Ilocos) o kaya pa-South papuntang Bicol via AH26! Siguraduhing may RFID load ang Autosweep at Easytrip mo para iwas-abala sa toll gates.";
+        }
+
+        // ==========================================
+        if (cleanInput.includes('kailan maganda') || cleanInput.includes('best time') || cleanInput.includes('bakasyon') || cleanInput.includes('summer')) {
+            return "Ang pinakamagandang buwan para mag-gala sa Pinas ay mula Disyembre hanggang Mayo (Dry Season) para iwas-ulan sa beach. Kung gusto mo naman ng mga festival, masaya tuwing Enero (Sinulog/Ati-Atihan) o Abril (Moriones)!";
+        }
+
+        if (cleanInput.includes('weather') || cleanInput.includes('panahon') || cleanInput.includes('ulan') || cleanInput.includes('bagyo') || cleanInput.includes('init')) {
+            return "Hindi ko pa live na nakikita ang panahon sa labas ng server ko, pero siguraduhing magdala ng payong o sunscreen bago bumiyahe! Laging mag-check sa PAGASA updates para safe ang biyahe.";
+        }
+
+        // ==========================================
+        if (cleanInput.includes('naiwan') || cleanInput.includes('flight') || cleanInput.includes('late')) {
+            return "🚨 Hala! Kung naiwan ka ng eroplano o bus, huwag mag-panic. Pumunta agad sa customer service desk ng airline o terminal. Pwede ka nilang i-rebook sa susunod na available flight/trip (may kaunting fee nga lang, depende sa ticket terms). Breathe in, breathe out!";
+        }
+
+        if (cleanInput.includes('nawala') || cleanInput.includes('wallet') || cleanInput.includes('nanakawan')) {
+            return "🚨 Emergency Mode! Kung nawalan ng wallet/pera habang nagbabakasyon: 1. I-lock agad ang bank cards mo sa mobile apps. 2. Pumunta sa pinakamalapit na presinto para kumuha ng Police Report. 3. Kontakin ang pamilya o kaibigan para padalhan ka muna ng pera sa GCash o Maya. Stay safe!";
+        }
+
+        if (cleanInput.includes('sino ka') || cleanInput.includes('who are you') || cleanInput.includes('pangalan') || cleanInput.includes('creator')) {
+            return "Ako si Lakbay AI, ang iyong virtual travel assistant at co-pilot dito sa Biyahe ni Juan! Gawa ako sa pinaghalong pagmamahal sa coding at pagnanais na mag-gala sa 7,641 na isla ng Pilipinas.";
+        }
+
+        if (cleanInput.includes('salamat') || cleanInput.includes('thank you') || cleanInput.includes('ty') || cleanInput.includes('thanks')) {
+            return "Walang anuman, ka-biyahe! Palaging tandaan: Ang ligtas na biyahe ay nagsisimula sa magandang plano. Enjoy coding and exploring! Saan ang susunod na hinto?";
+        }
+
+        if (cleanInput.includes('joke') || cleanInput.includes('patawa') || cleanInput.includes('biro')) {
+            const jokes = [
+                "Ano ang paboritong destinasyon ng mga barya? Edi... Batanes! (Barya-nes) 🪙",
+                "Bakit mahilig mag-travel ang mga unan? Kasi gusto nila ng... Pillow-pinas! 🛏️",
+                "Saan nagbabakasyon ang mga bampira? Edi sa... Camiguin! (Kasi gabi-gabi silang nangangagat) 🧛",
+                "Bakit laging pagod ang mga eroplano sa Pilipinas? Kasi marami silang 'Connections'! ✈️",
+                "Anong isda ang laging nandoon sa mga airport? Edi... 'Fly'-ing Fish! 🐟"
+            ];
+            return jokes[Math.floor(Math.random() * jokes.length)];
+        }
+
+        if (cleanInput.includes('hugot') || cleanInput.includes('love') || cleanInput.includes('broken') || cleanInput.includes('pasa')) {
+            const hugots = [
+                "Mabuti pa ang destinasyon sa mapa, madaling mahanap at marating. Pero ang taong para sa'yo, nasaan na kaya? Sana kasing daling i-set ng budget ang pag-ibig, 'no? Mag-travel ka na lang muna para mag-heal! 💔✈️",
+                "Sabi nila kapag naliligaw ka sa biyahe, magtanong ka lang sa mga lokal. Pero kapag naliligaw ka sa isang relasyon, kanino ka magtatanong? Dun ba sa bago niya? Ouch.",
+                "Buti pa sa airport, kahit 'Delayed' ang flight mo, may kasiguraduhin na darating pa rin. Eh sa kaniya? Ang tagal mong nag-antay, sa huli... 'Cancelled' ka pala bigla."
+            ];
+            return hugots[Math.floor(Math.random() * hugots.length)];
+        }
+
+        if (cleanInput.includes('crush') || cleanInput.includes('ganda mo') || cleanInput.includes('pogi')) {
+            return "Ui naman! Kinilig naman ang mga switch at if-statement ko doon. 🥰 Pero mas maganda pa rin ang tanawin kapag totoong nakatayo ka na sa harap ng Bulkang Mayon o white beach ng Boracay!";
+        }
+
         const defaultReplies = [
             "Magandang punto yan! Subukan mong i-click ang interactive map sa dashboard para awtomatikong mag-set ng budget at makita ang magagandang spots.",
-            "Hmm, kawili-wiling tanong! Tandaan na maaari mong i-save ang iyong mga pangarap na destinasyon gamit ang Travel Journal section sa kaliwa.",
-            "Pasensya na, medyo bago pa lang ang aking AI system para sa partikular na detalye na yan. Pero subukan mong i-explore ang Luzon, Visayas, o Mindanao sa dashboard natin!"
+            "Hmm, kawili-wiling tanong! Tandaan na maaari mong i-save ang iyong mga pangarap na destinasyon kasama ang Date of Travel gamit ang Travel Journal section natin.",
+            "Pasensya na, medyo bago pa lang ang aking AI system para sa partikular na detalye na yan. Pero subukan mong magtanong tungkol sa Luzon, Visayas, Mindanao, pagkain, o budget!",
+            "Mukhang malalim 'yan ah! Habang nag-iisip ka, bakit hindi mo subukang mag-add ng bagong adventure sa iyong journal?",
+            "Hindi ko masyadong nagets ang keyword mo, pero alam mo ba? Masarap mag-biyahe kapag kasama ang tropa o kahit mag-isa para mag-refresh ng utak mula sa coding!"
         ];
         return defaultReplies[Math.floor(Math.random() * defaultReplies.length)];
     }

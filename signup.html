@@ -20,25 +20,6 @@
             position: relative;
         }
 
-        .blob {
-            position: absolute;
-            width: 350px; height: 350px;
-            background: linear-gradient(135deg, rgba(40, 167, 69, 0.2), rgba(33, 136, 56, 0.2));
-            border-radius: 50%;
-            filter: blur(80px);
-            z-index: -1;
-            animation: moveBlob 18s infinite alternate ease-in-out;
-        }
-        .blob-2 {
-            right: 5%; bottom: 10%;
-            background: rgba(0, 210, 255, 0.15);
-            animation-duration: 12s;
-        }
-        @keyframes moveBlob {
-            from { transform: translate(0, 0) rotate(0deg); }
-            to { transform: translate(80px, 150px) rotate(30deg); }
-        }
-
         .page-wrapper {
             position: relative;
             display: flex;
@@ -49,9 +30,6 @@
             height: 100%;
         }
 
-        /* =====================================================================
-           UPGRADED FLOATING JOURNAL PHOTOS DESIGN (SCRAPBOOK + TAPE STYLE)
-           ===================================================================== */
         .floating-paper {
             position: absolute;
             background: #ffffff;
@@ -64,7 +42,6 @@
             pointer-events: none; 
         }
 
-        /* WASHI TAPE EFFECT (Maliit na tape sa itaas ng bawat Polaroid) */
         .floating-paper::before {
             content: '';
             position: absolute;
@@ -85,26 +62,24 @@
             height: 100px;
             object-fit: cover;
             border: 1px solid #e2e8f0;
-            filter: sepia(0.12) contrast(1.05) brightness(0.95); /* Vintage Kodak/Instax warm filter */
+            filter: sepia(0.12) contrast(1.05) brightness(0.95);
         }
 
-        /* UPGRADED TO HANDWRITTEN FONT */
         .floating-paper .caption {
-            font-family: 'Caveat', cursive; /* Ginawang totoong sulat-kamay */
+            font-family: 'Caveat', cursive;
             color: #1a202c;
-            font-size: 19px; /* Pinalaki nang bahagya para sa Caveat font */
+            font-size: 19px;
             text-align: center;
             margin-top: 4px;
             line-height: 1;
         }
 
-        /* POSITIONS */
         .photo-left-top {
             left: 5%;
             top: 10%;
             animation: floatLeftTop 6.5s infinite alternate ease-in-out;
         }
-        /* Nilagyan ng medyo kakaibang angle ang tape ng bottom cards para natural tingnan */
+
         .photo-left-bottom::before { transform: translateX(-50%) rotate(4deg) !important; }
         .photo-left-bottom {
             left: 8%;
@@ -124,7 +99,6 @@
             animation: floatRightBtm 6s infinite alternate ease-in-out;
         }
 
-        /* SWING ANIMATIONS */
         @keyframes floatLeftTop {
             0% { transform: translateY(0px) rotate(-15deg); }
             100% { transform: translateY(10px) rotate(-11deg); }
@@ -142,7 +116,6 @@
             100% { transform: translateY(-10px) rotate(-14deg); }
         }
 
-        /* 3D POP HOVER EFFECT */
         .page-wrapper:hover .photo-left-top {
             transform: scale(1.12) rotate(-5deg) translateY(-8px);
             box-shadow: 0 25px 45px rgba(0,0,0,0.6);
@@ -166,9 +139,7 @@
             .floating-paper .caption { font-size: 14px; }
             .floating-paper::before { width: 40px; height: 12px; top: -9px; }
         }
-        /* ===================================================================== */
-
-        /* UPGRADED GLASS CONTAINER WITH SMOOTH GLOW HOVER */
+ 
         .container {
             background: rgba(255, 255, 255, 0.08);
             backdrop-filter: blur(20px);
@@ -184,24 +155,12 @@
             animation: containerEntry 0.8s cubic-bezier(0.22, 1, 0.36, 1);
         }
 
-        /* Glow Aura on Hover */
         .container:hover {
-            border-color: rgba(46, 204, 113, 0.4);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.6), 0 0 25px rgba(46, 204, 113, 0.2);
+            border-color: rgba(255, 255, 255, 0.3); 
+            box-shadow: 0 20px 40px rgba(0,0,0,0.6);   
         }
 
-        .container::before {
-            content: '';
-            position: absolute;
-            top: 0; left: -150%;
-            width: 50%; height: 100%;
-            background: linear-gradient(to right, transparent, rgba(255,255,255,0.25), transparent);
-            transform: skewX(-25deg);
-            transition: 0.8s;
-        }
-        .container:hover::before {
-            left: 150%;
-        }
+        /* TINANGGAL DITO ANG .container::before AT .container:hover::before PARA WALA NANG GLASS SHINE EFFECT */
 
         @keyframes containerEntry {
             from { opacity: 0; transform: scale(0.9) translateY(30px); }
@@ -218,8 +177,8 @@
         input:focus { 
             background: rgba(255, 255, 255, 0.18); 
             outline: none;
-            border-color: #28a745;
-            box-shadow: 0 0 10px rgba(40, 167, 69, 0.3);
+            border-color: rgba(255, 255, 255, 0.5); 
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); 
             transform: translateX(5px);
         }
 
@@ -277,9 +236,6 @@
     </style>
 </head>
 <body>
-
-<div class="blob"></div>
-<div class="blob blob-2"></div>
 
 <div class="page-wrapper">
 
