@@ -229,9 +229,27 @@
 </div>
 
 <script>
-    const token = localStorage.getItem('token'); 
+    const currentHost = window.location.hostname;
+    let API_URL;
+
+    if (currentHost === 'localhost' || currentHost === '127.0.0.1') {
+        API_URL = 'http://localhost:3000';
+    } else {
+        API_URL = 'https://biyahe-ni-juan-backend.onrender.com';
+    }
+
+    const token = localStorage.getItem('token');
     const loggedInUser = localStorage.getItem('username') || 'Traveler';
-    const API_URL = 'http://localhost:3000';
+
+    // 2. I-UPDATE ANG MGA FETCH CALLS (Halimbawa):
+    async function loadMemories() {
+        // ... (yung existing code mo)
+        const response = await fetch(`${API_URL}/api/memories`, { // <--- GAMITIN ANG API_URL DITO
+            method: 'GET',
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+        // ...
+    }
 
     if (!token) {
         alert("⚠️ Please log in first to access your private journal.");
