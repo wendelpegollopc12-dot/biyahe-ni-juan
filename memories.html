@@ -231,149 +231,88 @@
 <script>
     const token = localStorage.getItem('token'); 
     const loggedInUser = localStorage.getItem('username') || 'Traveler';
+    const API_URL = 'http://localhost:3000'; // I-check kung ito ang port ng server mo
 
     if (!token) {
-        alert("⚠️ Please log in first to access your private journal.");
+        alert("⚠️ Please log in first.");
         window.location.href = 'index.html';
     }
 
     document.getElementById("journalOwner").innerText = loggedInUser;
     let currentLoadedMemories = [];
 
-    document.addEventListener("DOMContentLoaded", () => {
-        loadMemories();
-    });
+    document.addEventListener("DOMContentLoaded", loadMemories);
 
     async function loadMemories() {
         const container = document.getElementById("galleryContainer");
-        container.innerHTML = "";
-
         try {
-            const response = await fetch('/api/memories', {
+            const response = await fetch(`${API_URL}/api/memories`, {
                 method: 'GET',
                 headers: { 'Authorization': `Bearer ${token}` }
             });
 
-            if (!response.ok) throw new Error("Failed to load");
+            if (response.status === 401) throw new Error("Unauthorized");
+            if (!response.ok) throw new Error("Server error");
+            
             currentLoadedMemories = await response.json();
-
-            if (currentLoadedMemories.length === 0) {
-                container.innerHTML = `<div class="no-data">You haven't saved any photos yet, ${loggedInUser}. Upload above to get started!</div>`;
-                return;
-            }
-
-            currentLoadedMemories.forEach((item, index) => {
-                let randomAngle = (Math.random() * 6 - 3).toFixed(2) + "deg";
-                let initialAngle = (Math.random() * 10 - 5).toFixed(2) + "deg";
-
-                let card = document.createElement("div");
-                card.className = "polaroid";
-                
-                card.style.setProperty('--r', randomAngle);
-                card.style.setProperty('--initial-r', initialAngle);
-                card.style.setProperty('--delay', index); 
-                
-                card.innerHTML = `
-                    <button class="btn-delete" onclick="deleteMemory('${item._id}')" title="Delete">✕</button>
-                    <img src="${item.image}" alt="Memory" style="cursor: pointer;" onclick="openLightbox(${index})">
-                    <div class="caption">
-                        <span style="display:block; color:#e67e22; font-size:12px;">📍 ${item.location}</span>
-                        ${item.description}
-                    </div>
-                `;
-                container.appendChild(card);
-            });
+            renderGallery();
         } catch (err) {
             console.error(err);
+            container.innerHTML = `<div class="no-data">Failed to load memories. Check server connection.</div>`;
         }
     }
 
-    function addMemory() {
-        const fileInput = document.getElementById("photoFile");
-        const locInput = document.getElementById("photoLocation");
-        const descInput = document.getElementById("photoDesc");
-
-        if (!fileInput.files || !fileInput.files[0] || !locInput.value.trim() || !descInput.value.trim()) {
-            alert("Please fill out all fields and select an image.");
+    function renderGallery() {
+        const container = document.getElementById("galleryContainer");
+        container.innerHTML = "";
+        if (currentLoadedMemories.length === 0) {
+            container.innerHTML = `<div class="no-data">No photos yet. Start uploading!</div>`;
             return;
         }
+        
+        currentLoadedMemories.forEach((item, index) => {
+            let card = document.createElement("div");
+            card.className = "polaroid";
+            card.innerHTML = `
+                <button class="btn-delete" onclick="deleteMemory('${item._id}')">✕</button>
+                <img src="${item.image}" onclick="openLightbox(${index})">
+                <div class="caption">📍 ${item.location}<br>${item.description}</div>
+            `;
+            container.appendChild(card);
+        });
+    }
 
-        const file = fileInput.files[0];
+    async function addMemory() {
+        const fileInput = document.getElementById("photoFile");
+        const loc = document.getElementById("photoLocation").value;
+        const desc = document.getElementById("photoDesc").value;
+
+        if (!fileInput.files[0]) return alert("Select a photo!");
+
         const reader = new FileReader();
-
-        reader.onload = function (e) {
-            const img = new Image();
-            img.src = e.target.result;
-            img.onload = async function () {
-                const canvas = document.createElement('canvas');
-                const ctx = canvas.getContext('2d');
-                const MAX_WIDTH = 800; 
-                let width = img.width;
-                let height = img.height;
-
-                if (width > MAX_WIDTH) {
-                    height *= MAX_WIDTH / width;
-                    width = MAX_WIDTH;
-                }
-                canvas.width = width; canvas.height = height;
-                ctx.drawImage(img, 0, 0, width, height);
-                const compressedBase64 = canvas.toDataURL('image/jpeg', 0.6);
-
-                try {
-                    const response = await fetch('/api/memories', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Authorization': `Bearer ${token}`
-                        },
-                        body: JSON.stringify({
-                            location: locInput.value.trim(),
-                            description: descInput.value.trim(),
-                            image: compressedBase64
-                        })
-                    });
-
-                    if (response.ok) {
-                        fileInput.value = ""; locInput.value = ""; descInput.value = "";
-                        loadMemories();
-                    } else {
-                        alert("Failed to save the memory photo.");
-                    }
-                } catch (error) {
-                    alert("Error uploading file.");
-                }
-            };
+        reader.onload = async (e) => {
+            const response = await fetch(`${API_URL}/api/memories`, {
+                method: 'POST',
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}` 
+                },
+                body: JSON.stringify({ location: loc, description: desc, image: e.target.result })
+            });
+            if (response.ok) {
+                alert("Saved!");
+                loadMemories();
+            }
         };
-        reader.readAsDataURL(file);
+        reader.readAsDataURL(fileInput.files[0]);
     }
 
     async function deleteMemory(id) {
-        if (confirm("Are you sure you want to delete this memory from your journal?")) {
-            try {
-                const response = await fetch(`/api/memories/${id}`, {
-                    method: 'DELETE',
-                    headers: { 'Authorization': `Bearer ${token}` }
-                });
-                if (response.ok) loadMemories();
-            } catch (err) {
-                alert("Failed to delete memory.");
-            }
-        }
-    }
-
-    function openLightbox(index) {
-        const selectedMemory = currentLoadedMemories[index];
-        if (!selectedMemory) return;
-        document.getElementById("giantImg").src = selectedMemory.image;
-        document.getElementById("giantText").innerHTML = `
-            <span style="display:block; color:#e67e22; font-size:16px; margin-bottom:5px;">📍 ${selectedMemory.location}</span>
-            ${selectedMemory.description}
-        `;
-        document.getElementById("photoLightbox").classList.add("show");
-    }
-
-    function closeLightbox() {
-        document.getElementById("photoLightbox").classList.remove("show");
+        await fetch(`${API_URL}/api/memories/${id}`, {
+            method: 'DELETE',
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+        loadMemories();
     }
 </script>
 
