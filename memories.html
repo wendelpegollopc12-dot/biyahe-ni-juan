@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>My Memories - Juan's Journey</title>
+    <style>
+        body {
+            margin: 0; padding: 0; min-height: 100vh;
+            display: flex; justify-content: center; align-items: center;
+            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('https://wallpaperaccess.com/full/22986.jpg');
+            background-size: cover; background-position: center; background-attachment: fixed;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: white; overflow-x: hidden;
+        }
+
+        /* 🎬 ANIMATION 1: Entrance ng Main Glass Container */
+        @keyframes containerEntrance {
+            from {
+                opacity: 0;
+                transform: translateY(40px) scale(0.98);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        /* Glassmorphism Container na may Entrance Animation */
+        .memories-container {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            padding: 30px; border-radius: 25px;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6);
+            width: 900px; max-width: 95%; max-height: 90vh; overflow-y: auto;
+            
+            /* In-activate ang entrance animation */
+            animation: containerEntrance 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        .header-section {
+            display: flex; justify-content: space-between; align-items: center;
+            border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 15px; margin-bottom: 20px;
+        }
+
+        /* Form Controls */
+        .upload-box {
+            background: rgba(255,255,255,0.03); border: 1px dashed rgba(255,255,255,0.2);
+            padding: 20px; border-radius: 15px; margin-bottom: 25px;
+            display: grid; grid-template-columns: 1fr 1fr; gap: 15px; align-items: center;
+        }
+        @media(max-width: 600px){ .upload-box { grid-template-columns: 1fr; } }
+
+        input[type="text"], textarea, input[type="file"] {
+            width: 100%; padding: 12px; margin: 5px 0; border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.1); background: rgba(255, 255, 255, 0.08);
+            color: white; box-sizing: border-box; font-family: inherit;
+        }
+        textarea { resize: none; height: 75px; }
+
+        button {
+            padding: 12px; border: none; border-radius: 12px; font-weight: bold; cursor: pointer; transition: 0.3s;
+        }
+        .btn-add { background: linear-gradient(to right, #2ecc71, #28a745); color: white; width: 100%; }
+        .btn-back { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: white; }
+        button:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,210,255,0.3); }
+
+        /* Polaroid Photo Grid */
+        .gallery-grid {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 20px; margin-top: 20px;
+        }
+
+        /* 🎬 ANIMATION 2: Swabeng paglitaw ng bawat Polaroid Card */
+        @keyframes polaroidPop {
+            from {
+                opacity: 0;
+                transform: scale(0.7) translateY(30px) rotate(var(--initial-r, -5deg));
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0) rotate(var(--r));
+            }
+        }
+
+        .polaroid {
+            background: white; padding: 12px 12px 24px 12px; border-radius: 4px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.3); 
+            position: relative; color: #333;
+            
+            /* Default state bago mag-animate */
+            opacity: 0;
+            
+            /* Pinapatakbo ang pop animation kapag na-render */
+            animation: polaroidPop 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.1) forwards;
+            /* Ang delay ay dynamic nating ikakabit gamit ang JS loop sa ilalim */
+            animation-delay: calc(var(--delay) * 0.1s);
+            
+            transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1), box-shadow 0.4s ease;
+        }
+        
+        /* Floating at straightening effect tuwing io-hover */
+        .polaroid:hover { 
+            transform: scale(1.06) translateY(-10px) rotate(0deg) !important; 
+            z-index: 10; 
+            box-shadow: 0 20px 35px rgba(0,0,0,0.4); 
+        }
+        
+        .polaroid img {
+            width: 100%; height: 180px; object-fit: cover; border: 1px solid #ddd;
+        }
+
+        .polaroid .caption {
+            font-family: 'Courier New', Courier, monospace; font-weight: bold; font-size: 14px;
+            margin-top: 10px; text-align: center; word-wrap: break-word; color: #2c3e50;
+        }
+
+        .btn-delete {
+            position: absolute; top: 5px; right: 5px; background: rgba(231, 76, 60, 0.9);
+            color: white; border-radius: 50%; width: 25px; height: 25px; padding: 0;
+            font-size: 12px; display: flex; justify-content: center; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+            z-index: 5; transition: 0.2s;
+        }
+        .btn-delete:hover { transform: scale(1.15); background: #c0392b; }
+
+        .no-data { text-align: center; color: #ccc; grid-column: 1 / -1; padding: 4px; font-style: italic; }
+        
+        /* Custom Scrollbar */
+        .memories-container::-webkit-scrollbar { width: 6px; }
+        .memories-container::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 10px; }
+
+        /* Lightbox Backdrop Overlay */
+        .lightbox-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
+            z-index: 9999;
+            display: flex; justify-content: center; align-items: center;
+            opacity: 0; pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        /* Lalabas kapag active */
+        .lightbox-overlay.show {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        /* Giant Polaroid Container */
+        .giant-polaroid {
+            background: white;
+            padding: 20px 20px 40px 20px;
+            border-radius: 8px;
+            box-shadow: 0 25px 60px rgba(0,0,0,0.8);
+            max-width: 85%; max-height: 85vh;
+            transform: scale(0.8) rotate(-2deg);
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            color: #333;
+            display: flex; flex-direction: column; align-items: center;
+        }
+
+        .lightbox-overlay.show .giant-polaroid {
+            transform: scale(1) rotate(0deg);
+        }
+
+        /* Ang Giant Image sa loob ng papel */
+        .giant-polaroid img {
+            max-width: 100%;
+            max-height: 60vh;
+            object-fit: contain;
+            border: 1px solid #ccc;
+        }
+
+        /* Ang Giant Custom Caption */
+        .giant-caption {
+            font-family: 'Courier New', Courier, monospace;
+            font-weight: bold;
+            font-size: 20px;
+            margin-top: 20px;
+            text-align: center;
+            word-wrap: break-word;
+            color: #2c3e50;
+            width: 100%;
+        }
+
+        /* Close button style */
+        .close-lightbox {
+            position: absolute;
+            top: 25px; right: 35px;
+            font-size: 40px; color: #fff;
+            cursor: pointer; transition: 0.2s;
+        }
+        .close-lightbox:hover { color: #e74c3c; transform: scale(1.1); }
+    </style>
+</head>
+<body>
+
+<div class="memories-container">
+    <div class="header-section">
+        <h2 style="margin:0; letter-spacing:1px;">📸 Photo Journal of <span id="journalOwner" style="color: #2ecc71;">User</span></h2>
+        <button class="btn-back" onclick="window.location.href='index.html'">← Journal</button>
+    </div>
+
+    <div class="upload-box">
+        <div>
+            <label style="font-size:13px; color:#aaa;">Choose your Photos:</label>
+            <input type="file" id="photoFile" accept="image/*">
+            
+            <label style="font-size:13px; color:#aaa;">Place/Destinations:</label>
+            <input type="text" id="photoLocation" placeholder="e.g., Mayon Volcano, Albay">
+        </div>
+        <div>
+            <label style="font-size:13px; color:#aaa;">The Story or Description:</label>
+            <textarea id="photoDesc" placeholder="Write your happy memories from this place..."></textarea>
+            <button class="btn-add" onclick="addMemory()">Save my Journal ✨</button>
+        </div>
+    </div>
+
+    <h3 style="border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 5px;">My Album Grid</h3>
+    <div class="gallery-grid" id="galleryContainer"></div>
+</div>
+
+<div id="photoLightbox" class="lightbox-overlay" onclick="closeLightbox()">
+    <span class="close-lightbox">&times;</span>
+    <div class="giant-polaroid" onclick="event.stopPropagation()">
+        <img id="giantImg" src="" alt="Giant Memory">
+        <div id="giantText" class="giant-caption"></div>
+    </div>
+</div>
+
+<script>
+    const token = localStorage.getItem('token'); 
+    const loggedInUser = localStorage.getItem('username') || 'Traveler';
+
+    if (!token) {
+        alert("⚠️ Please log in first to access your private journal.");
+        window.location.href = 'index.html';
+    }
+
+    document.getElementById("journalOwner").innerText = loggedInUser;
+    let currentLoadedMemories = [];
+
+    document.addEventListener("DOMContentLoaded", () => {
+        loadMemories();
+    });
+
+    async function loadMemories() {
+        const container = document.getElementById("galleryContainer");
+        container.innerHTML = "";
+
+        try {
+            const response = await fetch('/api/memories', {
+                method: 'GET',
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+
+            if (!response.ok) throw new Error("Failed to load");
+            currentLoadedMemories = await response.json();
+
+            if (currentLoadedMemories.length === 0) {
+                container.innerHTML = `<div class="no-data">You haven't saved any photos yet, ${loggedInUser}. Upload above to get started!</div>`;
+                return;
+            }
+
+            currentLoadedMemories.forEach((item, index) => {
+                let randomAngle = (Math.random() * 6 - 3).toFixed(2) + "deg";
+                let initialAngle = (Math.random() * 10 - 5).toFixed(2) + "deg";
+
+                let card = document.createElement("div");
+                card.className = "polaroid";
+                
+                card.style.setProperty('--r', randomAngle);
+                card.style.setProperty('--initial-r', initialAngle);
+                card.style.setProperty('--delay', index); 
+                
+                card.innerHTML = `
+                    <button class="btn-delete" onclick="deleteMemory('${item._id}')" title="Delete">✕</button>
+                    <img src="${item.image}" alt="Memory" style="cursor: pointer;" onclick="openLightbox(${index})">
+                    <div class="caption">
+                        <span style="display:block; color:#e67e22; font-size:12px;">📍 ${item.location}</span>
+                        ${item.description}
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        } catch (err) {
+            console.error(err);
+        }
+    }
+
+    function addMemory() {
+        const fileInput = document.getElementById("photoFile");
+        const locInput = document.getElementById("photoLocation");
+        const descInput = document.getElementById("photoDesc");
+
+        if (!fileInput.files || !fileInput.files[0] || !locInput.value.trim() || !descInput.value.trim()) {
+            alert("Please fill out all fields and select an image.");
+            return;
+        }
+
+        const file = fileInput.files[0];
+        const reader = new FileReader();
+
+        reader.onload = function (e) {
+            const img = new Image();
+            img.src = e.target.result;
+            img.onload = async function () {
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                const MAX_WIDTH = 800; 
+                let width = img.width;
+                let height = img.height;
+
+                if (width > MAX_WIDTH) {
+                    height *= MAX_WIDTH / width;
+                    width = MAX_WIDTH;
+                }
+                canvas.width = width; canvas.height = height;
+                ctx.drawImage(img, 0, 0, width, height);
+                const compressedBase64 = canvas.toDataURL('image/jpeg', 0.6);
+
+                try {
+                    const response = await fetch('/api/memories', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${token}`
+                        },
+                        body: JSON.stringify({
+                            location: locInput.value.trim(),
+                            description: descInput.value.trim(),
+                            image: compressedBase64
+                        })
+                    });
+
+                    if (response.ok) {
+                        fileInput.value = ""; locInput.value = ""; descInput.value = "";
+                        loadMemories();
+                    } else {
+                        alert("Failed to save the memory photo.");
+                    }
+                } catch (error) {
+                    alert("Error uploading file.");
+                }
+            };
+        };
+        reader.readAsDataURL(file);
+    }
+
+    async function deleteMemory(id) {
+        if (confirm("Are you sure you want to delete this memory from your journal?")) {
+            try {
+                const response = await fetch(`/api/memories/${id}`, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                if (response.ok) loadMemories();
+            } catch (err) {
+                alert("Failed to delete memory.");
+            }
+        }
+    }
+
+    function openLightbox(index) {
+        const selectedMemory = currentLoadedMemories[index];
+        if (!selectedMemory) return;
+        document.getElementById("giantImg").src = selectedMemory.image;
+        document.getElementById("giantText").innerHTML = `
+            <span style="display:block; color:#e67e22; font-size:16px; margin-bottom:5px;">📍 ${selectedMemory.location}</span>
+            ${selectedMemory.description}
+        `;
+        document.getElementById("photoLightbox").classList.add("show");
+    }
+
+    function closeLightbox() {
+        document.getElementById("photoLightbox").classList.remove("show");
+    }
+</script>
+
+</body>
+</html>

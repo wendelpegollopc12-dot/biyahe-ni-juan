@@ -143,7 +143,7 @@
             border: 1px solid rgba(255, 255, 255, 0.05);
             display: flex;
             flex-direction: column;
-            height: 310px;
+            height: 420px;
         }
 
         #trip-list { overflow-y: auto; overflow-x: hidden; padding-right: 5px; height: 100%; }
@@ -170,7 +170,7 @@
             display: flex;
             align-items: center;
             justify-content: space-around;
-            height: 310px;
+            height: 420px;
             box-sizing: border-box;
             box-shadow: inset 0 0 20px rgba(0,0,0,0.6), 0 4px 15px rgba(0,0,0,0.4);
             position: relative;
@@ -529,6 +529,8 @@
                     <button id="cancel-btn" onclick="resetForm()" style="display:none; background: #6c757d; margin-top: 5px;">Cancel Edit</button>
                 </div>
                 <button class="explore-btn" onclick="window.location.href='destinations.html'">Explore Places 🌟</button>
+                <button class="memories-btn" onclick="window.location.href='memories.html'" style="background: linear-gradient(to right, #9b59b6, #8e44ad) !important; color: white !important; margin-top: 5px;">Photo Journal 📸
+</button>
                 <button class="logout-btn" onclick="logout()" style="background: #dc3545;">Logout 🚪</button>
             </div>
 
@@ -937,8 +939,8 @@
                 listDiv.innerHTML += `
                     <div class="trip-item" style="animation-delay: ${delay}s">
                         <div>
-                            <strong style="color: #00d2ff;">📍 ${trip.destination}</strong><br>
-                            <small>₱${Number(trip.budget).toLocaleString()}</small><br>
+                            <strong style="color: #00d2ff;">📍${trip.destination}</strong><br>
+                            <small> 💵 ₱${Number(trip.budget).toLocaleString()}</small><br>
                             <small style="color: #ffc107; font-size: 11px;">📅 ${formattedDate}</small>
                         </div>
                         <div style="display:flex; gap:5px; align-items: center;">
