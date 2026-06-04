@@ -630,9 +630,7 @@
 
     }
 
-</script>
-
-function openLightbox(index) {
+    function openLightbox(index) {
         const selectedMemory = currentLoadedMemories[index];
         if (!selectedMemory) return;
         document.getElementById("giantImg").src = selectedMemory.image;
@@ -647,6 +645,7 @@ function openLightbox(index) {
         document.getElementById("photoLightbox").classList.remove("show");
     }
 
+</script>
 
 </body>
 
