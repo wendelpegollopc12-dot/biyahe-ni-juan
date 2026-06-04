@@ -229,27 +229,9 @@
 </div>
 
 <script>
-    const currentHost = window.location.hostname;
-    let API_URL;
-
-    if (currentHost === 'localhost' || currentHost === '127.0.0.1') {
-        API_URL = 'http://localhost:3000';
-    } else {
-        API_URL = 'https://biyahe-ni-juan-backend.onrender.com';
-    }
-
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('token'); 
     const loggedInUser = localStorage.getItem('username') || 'Traveler';
-
-    // 2. I-UPDATE ANG MGA FETCH CALLS (Halimbawa):
-    async function loadMemories() {
-        // ... (yung existing code mo)
-        const response = await fetch(`${API_URL}/api/memories`, { // <--- GAMITIN ANG API_URL DITO
-            method: 'GET',
-            headers: { 'Authorization': `Bearer ${token}` }
-        });
-        // ...
-    }
+    const API_URL = 'https://biyahe-ni-juan-backend.onrender.com';
 
     if (!token) {
         alert("⚠️ Please log in first to access your private journal.");
@@ -307,35 +289,64 @@
         }
     }
 
-    async function addMemory() {
-    // ... (iyong existing code)
-    try {
-        const response = await fetch(`${API_URL}/api/memories`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}` // Siguraduhing may token
-            },
-            body: JSON.stringify({
-                location: locInput.value.trim(),
-                description: descInput.value.trim(),
-                image: compressedBase64
-            })
-        });
+    function addMemory() {
+        const fileInput = document.getElementById("photoFile");
+        const locInput = document.getElementById("photoLocation");
+        const descInput = document.getElementById("photoDesc");
 
-        const data = await response.json(); // Tingnan natin ang response ng server
-        console.log("Server response:", data); 
-
-        if (response.ok) {
-            loadMemories();
-        } else {
-            alert("Error: " + (data.error || "Failed to save"));
+        if (!fileInput.files || !fileInput.files[0] || !locInput.value.trim() || !descInput.value.trim()) {
+            alert("Please fill out all fields and select an image.");
+            return;
         }
-    } catch (error) {
-        console.error("Fetch Error:", error);
-        alert("Hindi makakonekta sa server.");
+
+        const file = fileInput.files[0];
+        const reader = new FileReader();
+
+        reader.onload = function (e) {
+            const img = new Image();
+            img.src = e.target.result;
+            img.onload = async function () {
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                const MAX_WIDTH = 800; 
+                let width = img.width;
+                let height = img.height;
+
+                if (width > MAX_WIDTH) {
+                    height *= MAX_WIDTH / width;
+                    width = MAX_WIDTH;
+                }
+                canvas.width = width; canvas.height = height;
+                ctx.drawImage(img, 0, 0, width, height);
+                const compressedBase64 = canvas.toDataURL('image/jpeg', 0.6);
+
+                try {
+                    const response = await fetch('/api/memories', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${token}`
+                        },
+                        body: JSON.stringify({
+                            location: locInput.value.trim(),
+                            description: descInput.value.trim(),
+                            image: compressedBase64
+                        })
+                    });
+
+                    if (response.ok) {
+                        fileInput.value = ""; locInput.value = ""; descInput.value = "";
+                        loadMemories();
+                    } else {
+                        alert("Failed to save the memory photo.");
+                    }
+                } catch (error) {
+                    alert("Error uploading file.");
+                }
+            };
+        };
+        reader.readAsDataURL(file);
     }
-}
 
     async function deleteMemory(id) {
         if (confirm("Are you sure you want to delete this memory from your journal?")) {
