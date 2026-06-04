@@ -297,26 +297,21 @@
         /* Giant Polaroid Container */
 
         .giant-polaroid {
+    background: white;
+    padding: 20px 20px 40px 20px;
+    border-radius: 8px;
+    box-shadow: 0 25px 60px rgba(0,0,0,0.8);
+    max-width: 85%;
+    max-height: 85vh;
 
-            background: white;
+    color: #333;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 
-            padding: 20px 20px 40px 20px;
-
-            border-radius: 8px;
-
-            box-shadow: 0 25px 60px rgba(0,0,0,0.8);
-
-            max-width: 85%; max-height: 85vh;
-
-            transform: scale(0.8) rotate(-2deg);
-
-            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-
-            color: #333;
-
-            display: flex; flex-direction: column; align-items: center;
-
-        }
+    /* removed zoom animation */
+    transform: none;
+}
 
 
 
@@ -341,6 +336,18 @@
             border: 1px solid #ccc;
 
         }
+
+        @keyframes floatCard {
+    0% { transform: translateY(0px) rotate(var(--r, -3deg)); }
+    50% { transform: translateY(-5px) rotate(var(--r, -3deg)); }
+    100% { transform: translateY(0px) rotate(var(--r, -3deg)); }
+}
+
+.polaroid {
+    animation:
+        polaroidPop 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.1) forwards,
+        floatCard 4s ease-in-out infinite;
+}
 
 
 
@@ -383,6 +390,32 @@
         }
 
         .close-lightbox:hover { color: #e74c3c; transform: scale(1.1); }
+
+        .lightbox-overlay.show .giant-polaroid img {
+    animation: zoomPhoto 8s ease-in-out infinite alternate;
+}
+
+
+
+.pin-text {
+    color: #ddbc00;
+    font-weight: bold;
+}
+
+@keyframes fadeUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px) scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.polaroid {
+    opacity: 0; /* default hidden */
+}
 
     </style>
 
@@ -556,7 +589,10 @@
 
                 <img src="${item.image}" onclick="openLightbox(${index})">
 
-                <div class="caption">📍 ${item.location}<br>${item.description}</div>
+                <div class="caption">
+    <span class="pin-text">📍${item.location}</span><br>
+    ${item.description}
+</div>
 
             `;
 
@@ -603,12 +639,15 @@
             });
 
             if (response.ok) {
+    alert("Saved!");
 
-                alert("Saved!");
+    // Clear form fields
+    document.getElementById("photoFile").value = "";
+    document.getElementById("photoLocation").value = "";
+    document.getElementById("photoDesc").value = "";
 
-                loadMemories();
-
-            }
+    loadMemories();
+}
 
         };
 
