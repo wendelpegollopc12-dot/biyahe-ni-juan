@@ -452,6 +452,92 @@
             background: rgba(26, 203, 152, 1) !important;
             transform: scale(1.05);
         }
+
+        .about-section{
+    position:fixed;
+    bottom:20px;
+    left:20px;
+    z-index:999;
+}
+
+.about-btn{
+    width:auto !important;
+    padding:7px 14px !important;
+    font-size:12px !important;
+
+    background:linear-gradient(135deg, #38bdf8, #0ea5e9);
+    color:white;
+
+    border:none;
+    border-radius:20px;
+    cursor:pointer;
+
+    box-shadow:0 4px 15px rgba(56,189,248,0.4);
+    transition:all 0.3s ease;
+}
+
+.about-btn:hover{
+    transform:translateY(-2px);
+    background:linear-gradient(135deg, #67e8f9, #38bdf8);
+    box-shadow:0 6px 20px rgba(56,189,248,0.6);
+}
+
+.about-modal{
+    display:none;
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background:rgba(0,0,0,0.65);
+    backdrop-filter:blur(5px);
+    z-index:99999;
+}
+
+.about-modal.show{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+
+.about-modal-content{
+    width:90%;
+    max-width:600px;
+    padding:30px;
+    border-radius:20px;
+
+    background:rgba(255,255,255,0.12);
+    backdrop-filter:blur(15px);
+    -webkit-backdrop-filter:blur(15px);
+
+    border:1px solid rgba(255,255,255,0.2);
+    color:white;
+
+    position:relative;
+
+    box-shadow:0 20px 50px rgba(0,0,0,0.4);
+
+    animation:fadeInModal .3s ease;
+}
+
+.about-close{
+    position:absolute;
+    top:12px;
+    right:18px;
+    font-size:28px;
+    cursor:pointer;
+}
+
+@keyframes fadeInModal{
+    from{
+        opacity:0;
+        transform:scale(.9);
+    }
+    to{
+        opacity:1;
+        transform:scale(1);
+    }
+}
         
     </style>
 </head>
@@ -617,6 +703,12 @@
     </div>
 </div>
 
+<div id="aboutSection" class="about-section" style="display:none;">
+    <button id="aboutBtn" class="about-btn">
+        About Biyahe ni Juan
+    </button>
+</div>
+
 <!-- Modernized AI Assistant Elements -->
 <div class="ai-chatbot-badge" onclick="toggleChatbot()">💬</div>
 <div class="ai-window" id="ai-chat-window">
@@ -641,6 +733,24 @@
         <button onclick="sendAiMessage()">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
         </button>
+    </div>
+</div>
+
+<div id="aboutModal" class="about-modal">
+    <div class="about-modal-content">
+        <span class="about-close">&times;</span>
+
+        <h2 style="color: #009200;">About Biyahe ni Juan</h2>
+
+        <p style="text-align: justify;">
+    Biyahe ni Juan is your ultimate digital companion for exploring the Philippines, offering a seamless way to plan itineraries, manage travel budgets, and journal memorable adventures.
+</p>
+
+        <h2 style="color: #D4AF37;">Our Team</h2>
+
+        <p style="text-align: justify;">
+            We are a passionate team of student developers and travel enthusiasts dedicated to shaping the future of tourism. Merging our love for technology with wanderlust, we craft intuitive, user-friendly digital tools that make organizing your dream getaway and preserving its magic—effortless and inspiring.
+        </p>
     </div>
 </div>
 
@@ -792,6 +902,7 @@
             document.getElementById('main-container').classList.add('dashboard-active');
             document.getElementById('login-section').style.display = 'none';
             document.getElementById('trip-section').style.display = 'block';
+            document.getElementById('aboutSection').style.display = 'block';
             loadTrips();
             return;
         }
@@ -813,6 +924,7 @@
                 document.getElementById('main-container').classList.add('dashboard-active');
                 document.getElementById('login-section').style.display = 'none';
                 document.getElementById('trip-section').style.display = 'block';
+                document.getElementById('aboutSection').style.display = 'block';
                 loadTrips(); 
             } else {
                 msgDiv.innerHTML = `<span style="color: #ff4d4d;">❌ ${data.message || "Failed"}</span>`;
@@ -1094,6 +1206,7 @@
             document.getElementById('main-container').classList.add('dashboard-active');
             document.getElementById('login-section').style.display = 'none';
             document.getElementById('trip-section').style.display = 'block';
+            document.getElementById('aboutSection').style.display = 'block';
             loadTrips();
         }
     };
@@ -1333,6 +1446,24 @@
         ];
         return defaultReplies[Math.floor(Math.random() * defaultReplies.length)];
     }
+
+    const aboutBtn = document.getElementById('aboutBtn');
+const aboutModal = document.getElementById('aboutModal');
+const aboutClose = document.querySelector('.about-close');
+
+aboutBtn.addEventListener('click', () => {
+    aboutModal.classList.add('show');
+});
+
+aboutClose.addEventListener('click', () => {
+    aboutModal.classList.remove('show');
+});
+
+aboutModal.addEventListener('click', (e) => {
+    if(e.target === aboutModal){
+        aboutModal.classList.remove('show');
+    }
+});
 
 </script>
 </body>
