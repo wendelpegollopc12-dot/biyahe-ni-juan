@@ -417,6 +417,38 @@
     opacity: 0; /* default hidden */
 }
 
+.top-tools{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:15px;
+    margin-bottom:15px;
+}
+
+.memory-stats{
+    background:rgba(255,255,255,0.05);
+    padding:10px 15px;
+    border-radius:12px;
+    border:1px solid rgba(255,255,255,0.08);
+    font-weight:bold;
+}
+
+#searchMemory{
+    max-width:250px;
+}
+
+.travel-quote{
+    margin-bottom:20px;
+    padding:12px;
+
+    background:rgba(255,255,255,0.04);
+    border-left:4px solid #2ecc71;
+    border-radius:10px;
+
+    color:#ddd;
+    font-style:italic;
+}
+
     </style>
 
 </head>
@@ -467,7 +499,28 @@
 
 
 
-    <h3 style="border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 5px;">My Album Grid</h3>
+    <div class="top-tools">
+
+    <div class="memory-stats">
+        📸 <span id="memoryCount">0</span> Memories
+    </div>
+
+    <input
+        type="text"
+        id="searchMemory"
+        placeholder="🔍 Search destination..."
+        onkeyup="filterMemories()"
+    >
+
+</div>
+
+<div class="travel-quote" id="travelQuote">
+    ✈️ Collect moments, not things.
+</div>
+
+<h3 style="border-bottom:1px solid rgba(255,255,255,0.05);padding-bottom:5px;">
+    My Album Grid
+</h3>
 
     <div class="gallery-grid" id="galleryContainer"></div>
 
@@ -492,6 +545,90 @@
 
 
 <script>
+
+    const quotes = [
+    "✈️ Collect moments, not things.",
+    "🌍 Travel is the only thing you buy that makes you richer.",
+    "📸 Take only pictures, leave only footprints.",
+    "🏝️ Adventure awaits.",
+    "🗺️ Every destination has a story."
+];
+
+document.getElementById("travelQuote").innerHTML =
+quotes[Math.floor(Math.random()*quotes.length)];
+
+function updateMemoryCounter(){
+    document.getElementById("memoryCount").innerHTML =
+    currentLoadedMemories.length;
+}
+
+function filterMemories(){
+
+    const search =
+    document.getElementById("searchMemory")
+    .value
+    .toLowerCase();
+
+    const filtered =
+    currentLoadedMemories.filter(item=>
+
+        item.location.toLowerCase().includes(search) ||
+
+        item.description.toLowerCase().includes(search)
+
+    );
+
+    renderFilteredGallery(filtered);
+
+}
+
+function renderFilteredGallery(data){
+
+    const container =
+    document.getElementById("galleryContainer");
+
+    container.innerHTML="";
+
+    if(data.length==0){
+
+        container.innerHTML=
+        `<div class="no-data">
+        No matching memories found.
+        </div>`;
+
+        return;
+    }
+
+    data.forEach((item,index)=>{
+
+        let card=document.createElement("div");
+
+        card.className="polaroid";
+
+        card.innerHTML=`
+
+        <button class="btn-delete"
+        onclick="deleteMemory('${item._id}')">
+        ✕
+        </button>
+
+        <img src="${item.image}"
+        onclick="openLightbox(${currentLoadedMemories.indexOf(item)})">
+
+        <div class="caption">
+        <span class="pin-text">
+        📍${item.location}
+        </span><br>
+        ${item.description}
+        </div>
+
+        `;
+
+        container.appendChild(card);
+
+    });
+
+}
 
     const token = localStorage.getItem('token'); 
 
@@ -547,8 +684,8 @@
 
             currentLoadedMemories = await response.json();
 
-            renderGallery();
-
+renderGallery();
+updateMemoryCounter();
         } catch (err) {
 
             console.error(err);

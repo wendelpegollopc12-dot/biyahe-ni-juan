@@ -232,16 +232,6 @@
             transition: all 0.2s ease;
         }
 
-        .clock-card {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 15px;
-            padding: 12px;
-            text-align: center;
-            margin-top: 20px;
-            width: 100%;
-            box-sizing: border-box;
-        }
         .clock-time { font-size: 22px; font-weight: bold; color: #00d2ff; letter-spacing: 1px; }
         .clock-date { font-size: 11px; color: #bbb; margin-top: 3px; text-transform: uppercase; }
 
@@ -300,17 +290,23 @@
             margin-bottom: 15px;
         }
         .user-badge {
-            background: rgba(0, 210, 255, 0.15);
-            border: 1px solid rgba(0, 210, 255, 0.3);
-            padding: 5px 12px;
-            border-radius: 20px;
-            font-size: 13px;
-            font-weight: 600;
-            color: #00d2ff;
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-        }
+    position:fixed;
+    top:20px;
+    left:20px;
+    display:none;
+    align-items:center;
+    gap:8px;
+    padding:10px 18px;
+    background:rgba(52,152,219,0.18);
+    backdrop-filter:blur(12px);
+    border:1px solid rgba(52,152,219,0.4);
+    border-radius:30px;
+    color:#4fc3f7;
+    z-index:9999;
+    transform:translateY(-2px);
+    transition:.3s;
+
+}
 
         .ai-chatbot-badge {
             position: fixed;
@@ -538,10 +534,411 @@
         transform:scale(1);
     }
 }
+
+.info-panel{
+    display:flex;
+    gap:10px;
+    margin-top:20px;
+}
+
+.clock-card,
+.weather-card{
+    flex:1;
+    height:75px;
+
+    background:rgba(255,255,255,0.04);
+    border:1px solid rgba(255,255,255,0.08);
+    border-radius:15px;
+
+    padding:12px;
+    box-sizing:border-box;
+
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+}
+
+.clock-card{
+    text-align:left;
+}
+
+.weather-card{
+    text-align:right;
+}
+
+.clock-time{
+    font-size:20px;
+    font-weight:bold;
+    color:#2ecc71;
+}
+
+.clock-date{
+    font-size:10px;
+    color:#bbb;
+}
+
+.weather-city{
+    font-size:12px;
+    color:#ddd;
+}
+
+.weather-temp{
+    font-size:18px;
+    font-weight:bold;
+    color:#4fc3f7;
+}
+
+.weather-modal{
+
+    position:fixed;
+
+    top:0;
+    left:0;
+
+    width:100%;
+    height:100%;
+
+    background:rgba(0,0,0,.7);
+
+    display:none;
+
+    justify-content:center;
+
+    align-items:center;
+
+    z-index:9999;
+
+}
+
+.weather-panel{
+
+    width:420px;
+
+    background:rgba(255,255,255,.08);
+
+    backdrop-filter:blur(15px);
+
+    border-radius:20px;
+
+    padding:25px;
+
+    color:white;
+
+}
+
+.weather-panel h2{
+
+    text-align:center;
+
+}
+
+#weatherList{
+
+    margin-top:20px;
+
+    line-height:35px;
+
+}
+
+.weather-item{
+
+    padding:12px;
+
+    margin-bottom:10px;
+
+    background:rgba(255,255,255,0.05);
+
+    border-radius:12px;
+
+    cursor:pointer;
+
+    transition:.3s;
+
+}
+
+.weather-item:hover{
+
+    background:rgba(255,255,255,0.12);
+
+    transform:translateX(5px);
+
+}
+
+.weather-loading{
+
+    text-align:center;
+
+    padding:30px;
+
+    color:#4fc3f7;
+
+    font-size:18px;
+
+}
+
+.weather-panel button{
+
+    width:140px;
+
+    margin:20px auto 0;
+
+    display:block;
+
+    padding:10px;
+
+    border:none;
+
+    border-radius:10px;
+
+    background:#3498db;
+
+    color:white;
+
+    cursor:pointer;
+
+    transition:.3s;
+
+}
+
+.weather-panel button:hover{
+
+    transform:scale(1.05);
+
+}
+
+#weatherList{
+
+    margin-top:20px;
+
+}
+
+#weatherDetails{
+
+    margin-top:20px;
+
+}
+
+.weather-panel button{
+
+    display:block;
+
+    width:140px;
+
+    margin:20px auto 0;
+
+    padding:10px;
+
+    border:none;
+
+    border-radius:10px;
+
+    background:#3498db;
+
+    color:white;
+
+    cursor:pointer;
+
+}
+
+.clock-modal{
+
+    position:fixed;
+
+    top:0;
+    left:0;
+
+    width:100%;
+    height:100%;
+
+    background:rgba(0,0,0,.7);
+
+    display:none;
+
+    justify-content:center;
+
+    align-items:center;
+
+    z-index:9999;
+
+}
+
+.clock-panel{
+
+    width:420px;
+
+    padding:30px;
+
+    border-radius:20px;
+
+    backdrop-filter:blur(15px);
+
+    background:rgba(255,255,255,.08);
+
+    color:white;
+
+    text-align:center;
+
+}
+
+.analog-clock{
+
+    position:relative;
+
+    width:220px;
+
+    height:220px;
+
+    border:5px solid white;
+
+    border-radius:50%;
+
+    margin:20px auto;
+
+}
+
+.hand{
+
+    position:absolute;
+
+    left:50%;
+
+    bottom:50%;
+
+    transform-origin:bottom;
+
+}
+
+.hour{
+
+    width:5px;
+
+    height:60px;
+
+    background:red;
+
+}
+
+.minute{
+
+    width:4px;
+
+    height:80px;
+
+    background:deepskyblue;
+
+}
+
+.second{
+
+    width:2px;
+
+    height:95px;
+
+    background:gold;
+
+}
+
+.clock-center{
+
+    position:absolute;
+
+    width:12px;
+    height:12px;
+
+    background:white;
+
+    border-radius:50%;
+
+    top:50%;
+    left:50%;
+
+    transform:translate(-50%,-50%);
+
+}
+
+.number{
+
+    position:absolute;
+
+    color:white;
+
+    font-weight:bold;
+
+    font-size:20px;
+
+}
+
+.num12{
+    top:8px;
+    left:50%;
+    transform:translateX(-50%);
+}
+
+.num1{
+    top:22px;
+    right:50px;
+}
+
+.num2{
+    top:50px;
+    right:22px;
+}
+
+.num3{
+    top:50%;
+    right:8px;
+    transform:translateY(-50%);
+}
+
+.num4{
+    bottom:50px;
+    right:22px;
+}
+
+.num5{
+    bottom:22px;
+    right:50px;
+}
+
+.num6{
+    bottom:8px;
+    left:50%;
+    transform:translateX(-50%);
+}
+
+.num7{
+    bottom:22px;
+    left:50px;
+}
+
+.num8{
+    bottom:50px;
+    left:22px;
+}
+
+.num9{
+    top:50%;
+    left:8px;
+    transform:translateY(-50%);
+}
+
+.num10{
+    top:50px;
+    left:22px;
+}
+
+.num11{
+    top:22px;
+    left:50px;
+}
         
     </style>
 </head>
 <body>
+
+    <div id="user-display-badge" class="user-badge" style="display: none; background: rgba(255, 255, 255, 0.15); padding: 5px 12px; border-radius: 20px; font-size: 13px; white-space: nowrap;">
+                User: <span id="user-greeting">Biyahero</span>
+            </div>
 
 <div class="blob"></div>
 <div class="blob blob-2"></div>
@@ -568,9 +965,7 @@
         <h1 style="font-size: 24px; margin: 0; letter-spacing: 1px; text-align: center;">🇵🇭 Biyahe ni Juan</h1>
         
         <div style="position: absolute; right: 0; display: flex; align-items: center; gap: 10px;">
-            <div id="user-display-badge" class="user-badge" style="display: none; background: rgba(255, 255, 255, 0.15); padding: 5px 12px; border-radius: 20px; font-size: 13px; white-space: nowrap;">
-                User: <span id="user-greeting">Biyahero</span>
-            </div>
+            
             <button id="settings-btn" onclick="toggleSettings()" style="width: auto; background: transparent; font-size: 20px; padding: 0; margin: 0;">⚙️</button>
         </div>
     </div>
@@ -691,10 +1086,24 @@
         </div>
     </div>
 
-    <div class="clock-card">
+    <div class="info-panel">
+
+    <div class="clock-card" onclick="openClockModal()">
         <div class="clock-time" id="live-clock">00:00:00 AM</div>
-        <div class="clock-date" id="live-date">Loading Date...</div>
+        <div class="clock-date" id="live-date">Loading Date.</div>
     </div>
+
+    <div class="weather-card" onclick="openWeatherPanel()">
+        <div class="weather-city" id="weather-city">
+            Loading...
+        </div>
+
+        <div class="weather-temp" id="weather-temp">
+            --°C
+        </div>
+    </div>
+
+</div>
 
     <div id="message" style="text-align: center; margin-top: 15px;"></div>
 
@@ -752,6 +1161,70 @@
             We are a passionate team of student developers and travel enthusiasts dedicated to shaping the future of tourism. Merging our love for technology with wanderlust, we craft intuitive, user-friendly digital tools that make organizing your dream getaway and preserving its magic—effortless and inspiring.
         </p>
     </div>
+</div>
+
+        <div id="weatherModal" class="weather-modal">
+
+    <div class="weather-panel">
+
+        <h2>Philippine Weather</h2>
+
+        <div id="weatherList">
+
+            🌦️ Loading Philippine Weather...
+
+        </div>
+
+        <div id="weatherDetails"
+        style="display:none;">
+
+        </div>
+
+        <button onclick="closeWeatherPanel()">
+            Close
+        </button>
+
+    </div>
+
+</div>
+
+<div id="clockModal" class="clock-modal">
+
+    <div class="clock-panel">
+
+        <div class="analog-clock">
+
+            <div id="hourHand" class="hand hour"></div>
+
+            <div id="minuteHand" class="hand minute"></div>
+
+            <div id="secondHand" class="hand second"></div>
+
+            <div class="clock-center"></div>
+
+<div class="number num1">1</div>
+<div class="number num2">2</div>
+<div class="number num3">3</div>
+<div class="number num4">4</div>
+<div class="number num5">5</div>
+<div class="number num6">6</div>
+<div class="number num7">7</div>
+<div class="number num8">8</div>
+<div class="number num9">9</div>
+<div class="number num10">10</div>
+<div class="number num11">11</div>
+<div class="number num12">12</div>
+
+        </div>
+
+        <div id="digitalClock"></div>
+
+        <button onclick="closeClockModal()">
+            Close
+        </button>
+
+    </div>
+
 </div>
 
 <script>
@@ -1464,6 +1937,289 @@ aboutModal.addEventListener('click', (e) => {
         aboutModal.classList.remove('show');
     }
 });
+
+const API_KEY = "eb1081eecfb6999f3f779341b0525707";
+
+const weatherCities = [
+    "Manila",
+    "Baguio",
+    "Cebu",
+    "Davao",
+    "Vigan",
+    "Puerto Princesa",
+    "Naic"
+];
+
+let weatherIndex = 0;
+
+async function updateWeather(){
+
+    const city = weatherCities[weatherIndex];
+
+    try{
+
+        const response = await fetch(
+        `https://api.openweathermap.org/data/2.5/weather?q=${city},PH&units=metric&appid=${API_KEY}`
+        );
+
+        const data = await response.json();
+
+        let icon = "☀️";
+
+        if(data.weather[0].main=="Clouds")
+            icon="☁️";
+
+        if(data.weather[0].main=="Rain")
+            icon="🌧️";
+
+        if(data.weather[0].main=="Thunderstorm")
+            icon="⛈️";
+
+        if(data.weather[0].main=="Drizzle")
+            icon="🌦️";
+
+        if(data.weather[0].main=="Mist")
+            icon="🌫️";
+
+        document.getElementById("weather-city").innerHTML =
+        city + " " + icon;
+
+        document.getElementById("weather-temp").innerHTML =
+        Math.round(data.main.temp) + "°C";
+
+    }
+    catch(error){
+
+        document.getElementById("weather-city").innerHTML =
+        "Weather Error";
+
+        document.getElementById("weather-temp").innerHTML =
+        "--°C";
+
+    }
+
+    weatherIndex++;
+
+    if(weatherIndex>=weatherCities.length)
+        weatherIndex=0;
+
+}
+
+updateWeather();
+
+setInterval(updateWeather,15000);
+
+async function openWeatherPanel(){
+
+    document.getElementById(
+    "weatherModal"
+    ).style.display="flex";
+
+    let html="";
+
+    for(const city of weatherCities){
+
+        try{
+
+            const response=
+            await fetch(
+            `https://api.openweathermap.org/data/2.5/weather?q=${city},PH&units=metric&appid=${API_KEY}`
+            );
+
+            const data=
+            await response.json();
+
+            let icon="☀️";
+
+            if(data.weather[0].main=="Clouds")
+                icon="☁️";
+
+            if(data.weather[0].main=="Rain")
+                icon="🌧️";
+
+            if(data.weather[0].main=="Thunderstorm")
+                icon="⛈️";
+
+            if(data.weather[0].main=="Drizzle")
+                icon="🌦️";
+
+            if(data.weather[0].main=="Mist")
+                icon="🌫️";
+
+            html += `
+<div class="weather-item"
+onclick="showCityWeather('${city}')">
+
+    ${icon}
+    <strong>${city}</strong>
+
+    -
+
+    ${Math.round(data.main.temp)}°C
+
+</div>
+`;
+
+        }
+
+        catch{
+
+            html +=
+            `<div>
+
+            ${city}
+
+            -
+            Error
+
+            </div>`;
+
+        }
+
+    }
+
+    document.getElementById(
+    "weatherList"
+    ).innerHTML=html;
+
+}
+
+function closeWeatherPanel(){
+
+    document.getElementById(
+    "weatherModal"
+    ).style.display="none";
+
+}
+
+async function showCityWeather(city){
+
+    const response=
+    await fetch(
+    `https://api.openweathermap.org/data/2.5/weather?q=${city},PH&units=metric&appid=${API_KEY}`
+    );
+
+    const data=
+    await response.json();
+
+    document.getElementById(
+    "weatherList"
+    ).style.display="none";
+
+    document.getElementById(
+    "weatherDetails"
+    ).style.display="block";
+
+    document.getElementById(
+    "weatherDetails"
+    ).innerHTML=
+
+    `
+
+    <h2>${city}</h2>
+
+    <h3>${data.weather[0].description}</h3>
+
+    <p>🌡️ Temperature:
+    ${Math.round(data.main.temp)}°C</p>
+
+    <p>🥵 Feels Like:
+    ${Math.round(data.main.feels_like)}°C</p>
+
+    <p>💧 Humidity:
+    ${data.main.humidity}%</p>
+
+    <p>💨 Wind Speed:
+    ${data.wind.speed} m/s</p>
+
+    <p>📊 Pressure:
+    ${data.main.pressure} hPa</p>
+
+    <p>👁️ Visibility:
+    ${(data.visibility/1000).toFixed(1)} km</p>
+
+    <br>
+
+    <button onclick="backWeatherList()">
+
+    Back
+
+    </button>
+
+    `;
+
+}
+
+function backWeatherList(){
+
+    document.getElementById(
+    "weatherList"
+    ).style.display="block";
+
+    document.getElementById(
+    "weatherDetails"
+    ).style.display="none";
+
+}
+
+function openClockModal(){
+
+    document.getElementById(
+    "clockModal"
+    ).style.display="flex";
+
+}
+
+function closeClockModal(){
+
+    document.getElementById(
+    "clockModal"
+    ).style.display="none";
+
+}
+
+function updateAnalogClock(){
+
+    const now=new Date();
+
+    const sec=now.getSeconds()*6;
+
+    const min=now.getMinutes()*6;
+
+    const hr=
+    (now.getHours()%12)*30
+    +
+    now.getMinutes()/2;
+
+    document.getElementById(
+    "secondHand"
+    ).style.transform=
+    `translateX(-50%) rotate(${sec}deg)`;
+
+    document.getElementById(
+    "minuteHand"
+    ).style.transform=
+    `translateX(-50%) rotate(${min}deg)`;
+
+    document.getElementById(
+    "hourHand"
+    ).style.transform=
+    `translateX(-50%) rotate(${hr}deg)`;
+
+    document.getElementById(
+    "digitalClock"
+    ).innerHTML=
+
+    now.toLocaleTimeString();
+
+}
+
+setInterval(
+updateAnalogClock,
+1000
+);
+
+updateAnalogClock();
 
 </script>
 </body>
