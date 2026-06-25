@@ -457,19 +457,88 @@
 }
 
 .about-btn{
-    width:auto !important;
-    padding:7px 14px !important;
-    font-size:12px !important;
 
-    background:linear-gradient(135deg, #38bdf8, #0ea5e9);
-    color:white;
+    position:relative;
 
-    border:none;
-    border-radius:20px;
+    width:65px;
+
+    height:65px;
+
+    border-radius:50%;
+
+    background:
+    rgba(255,255,255,.12);
+
+    backdrop-filter:blur(15px);
+
+    -webkit-backdrop-filter:blur(15px);
+
+    border:1px solid
+    rgba(255,255,255,.2);
+
+    box-shadow:
+    0 10px 30px
+    rgba(0,0,0,.30);
+
     cursor:pointer;
 
-    box-shadow:0 4px 15px rgba(56,189,248,0.4);
-    transition:all 0.3s ease;
+    transition:.35s;
+
+}
+
+.main-icon{
+
+    width:100%;
+
+    height:100%;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    font-size:30px;
+
+    color:white;
+
+}
+
+.menu-item{
+
+    position:absolute;
+
+    left:50%;
+
+    bottom:10px;
+
+    margin-left:-22.5px;
+
+    width:45px;
+
+    height:45px;
+
+    border-radius:50%;
+
+    background:
+    rgba(255,255,255,.12);
+
+    backdrop-filter:blur(15px);
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    font-size:22px;
+
+    opacity:0;
+
+    pointer-events:none;
+
+    transition:.35s;
+
 }
 
 .about-btn:hover{
@@ -1075,14 +1144,300 @@ position:relative;
 .weather-card:hover,
 .clock-card:hover{
 
-    transform:translateY(-5px) scale(1.03);
-
-    border:1px solid rgba(255,255,255,0.35);
-
+    transform:translateY(-4px) scale(1.02);
     box-shadow:
-    0 0 10px rgba(255,255,255,0.15),
-    0 0 25px rgba(80,170,255,0.30),
-    0 0 50px rgba(80,170,255,0.20);
+    0 0 15px rgba(255,255,255,0.20),
+    0 0 30px rgba(100,180,255,0.35),
+    0 0 45px rgba(100,180,255,0.20);
+
+}
+
+.about-btn.active .menu1{
+
+    transform:
+    translateY(-70px);
+
+    opacity:1;
+    pointer-events:auto;
+
+}
+
+.about-btn.active .menu2{
+
+    transform:
+    translateY(-130px);
+
+    opacity:1;
+    pointer-events:auto;
+
+}
+
+.about-btn.active .menu3{
+
+    transform:
+    translateY(-190px);
+
+    opacity:1;
+    pointer-events:auto;
+
+}
+
+.about-btn.active .menu4{
+
+    transform:
+
+    translateY(-250px);
+    opacity:1;
+    pointer-events:auto;
+
+}
+
+.about-popup{
+
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background:
+    rgba(0,0,0,.45);
+    backdrop-filter:blur(8px);
+    display:none;
+    justify-content:center;
+    align-items:center;
+    z-index:99999;
+
+}
+
+.popup-card{
+
+    width:380px;
+    max-width:90%;
+    background:
+    rgba(255,255,255,.12);
+    backdrop-filter:blur(20px);
+    -webkit-backdrop-filter:blur(20px);
+    border-radius:25px;
+    border:1px solid
+    rgba(255,255,255,.2);
+    padding:30px;
+    color:white;
+    position:relative;
+    box-shadow:
+    0 15px 40px
+    rgba(0,0,0,.35);
+    animation:
+    popupFade .35s;
+
+}
+
+.popup-card h2{
+
+    margin-top:0;
+    color:#38bdf8;
+
+}
+
+.popup-card p{
+
+    line-height:1.7;
+
+}
+
+.popup-close{
+
+    position:absolute;
+    top:12px;
+    right:15px;
+    background:transparent;
+    border:none;
+    outline:none;
+    box-shadow:none;
+    color:white;
+    font-size:18px;
+    font-weight:bold;
+    cursor:pointer;
+    padding:0;
+    margin:0;
+    width:auto;
+    height:auto;
+    line-height:1;
+    transition:.25s;
+
+}
+
+.popup-close:hover{
+
+    transform:scale(1.1);
+    color:#ff3b3b;
+    transform:scale(1.15);
+
+}
+
+.popup-close:active{
+
+    color:#c70000;
+    transform:scale(0.95);
+
+}
+
+@keyframes popupFade{
+
+    from{
+
+        opacity:0;
+        transform:
+        scale(.8);
+
+    }
+
+    to{
+
+        opacity:1;
+        transform:
+        scale(1);
+
+    }
+
+}
+
+#popupText{
+
+    text-align:justify;
+    line-height:1.8;
+
+}
+
+.menu-item:hover{
+
+    transform:scale(1.15);
+    box-shadow:
+    0 0 20px rgba(56,189,248,.8);
+    border:1px solid
+    rgba(255,255,255,.5);
+
+}
+
+.ph-map{
+    position:relative;
+    overflow:hidden;
+}
+
+.boat{
+
+    position:absolute;
+
+    bottom:15%;
+
+    left:-80px;
+
+    font-size:40px;
+
+    animation:
+    sail 18s linear infinite,
+    floatBoat 2s ease-in-out infinite;
+
+}
+
+@keyframes sail{
+
+    from{
+
+        left:100%;
+
+    }
+
+    to{
+
+        left:-100px;
+
+    }
+
+}
+
+@keyframes floatBoat{
+
+    0%{
+
+        transform:
+        translateY(0px);
+
+    }
+
+    50%{
+
+        transform:
+        translateY(-6px);
+
+    }
+
+    100%{
+
+        transform:
+        translateY(0px);
+
+    }
+
+}
+
+.plane{
+
+    position:absolute;
+
+    top:15%;
+
+    left:-100px;
+
+    font-size:32px;
+
+    z-index:20;
+
+    animation:
+    flyPlane 14s linear infinite;
+
+}
+
+@keyframes flyPlane{
+
+    0%{
+
+        left:-100px;
+
+        top:18%;
+
+        transform:
+        rotate(15deg);
+
+    }
+
+    25%{
+
+        top:10%;
+
+    }
+
+    50%{
+
+        top:15%;
+
+    }
+
+    75%{
+
+        top:8%;
+
+    }
+
+    100%{
+
+        left:110%;
+
+        top:14%;
+
+        transform:
+        rotate(15deg);
+
+    }
 
 }
         
@@ -1173,6 +1528,10 @@ position:relative;
                 <div class="hover-indicator" id="map-hover-text">Hover over the map to explore! 🗺️</div>
                 
                 <div class="map-wrapper">
+
+                    <div class="boat"onclick="openShipsPanel()">⛵</div>
+                    <div class="plane"onclick="openAirlinesPanel()">✈️</div>
+
                     <svg class="ph-svg-container" viewBox="0 0 120 180" xmlns="http://www.w3.org/2000/svg">
                         <defs>
                             <pattern id="mapGrid" width="15" height="15" patternUnits="userSpaceOnUse">
@@ -1266,10 +1625,41 @@ position:relative;
     </div>
 </div>
 
-<div id="aboutSection" class="about-section" style="display:none;">
-    <button id="aboutBtn" class="about-btn">
-        About Biyahe ni Juan
-    </button>
+<div id="aboutSection"
+class="about-section"
+style="display:none;">
+
+    <div
+    id="aboutBtn"
+    class="about-btn"
+    onclick="toggleAboutMenu()">
+
+        <div class="main-icon">
+            ✈️
+        </div>
+
+        <div class="menu-item menu1"
+        onclick="event.stopPropagation();showAboutInfo();">
+            📖
+        </div>
+
+        <div class="menu-item menu2"
+        onclick="event.stopPropagation();showMission();">
+            ℹ️
+        </div>
+
+        <div class="menu-item menu3"
+        onclick="event.stopPropagation();showEmail();">
+            📧
+        </div>
+
+        <div class="menu-item menu4"
+        onclick="event.stopPropagation();showAddress();">
+            🏠
+        </div>
+
+    </div>
+
 </div>
 
 <!-- Modernized AI Assistant Elements -->
@@ -1296,24 +1686,6 @@ position:relative;
         <button onclick="sendAiMessage()">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
         </button>
-    </div>
-</div>
-
-<div id="aboutModal" class="about-modal">
-    <div class="about-modal-content">
-        <span class="about-close">&times;</span>
-
-        <h2 style="color: #009200;">About Biyahe ni Juan</h2>
-
-        <p style="text-align: justify;">
-    Biyahe ni Juan is your ultimate digital companion for exploring the Philippines, offering a seamless way to plan itineraries, manage travel budgets, and journal memorable adventures.
-</p>
-
-        <h2 style="color: #D4AF37;">Our Team</h2>
-
-        <p style="text-align: justify;">
-            We are a passionate team of student developers and travel enthusiasts dedicated to shaping the future of tourism. Merging our love for technology with wanderlust, we craft intuitive, user-friendly digital tools that make organizing your dream getaway and preserving its magic—effortless and inspiring.
-        </p>
     </div>
 </div>
 
@@ -1378,6 +1750,59 @@ position:relative;
         </button>
 
     </div>
+
+</div>
+
+<div id="aboutPopup" class="about-popup">
+
+    <div class="popup-card">
+
+        <button
+        class="popup-close"
+        onclick="closePopup()">
+            ✕
+        </button>
+
+        <h2 id="popupTitle"></h2>
+
+        <p id="popupText"></p>
+
+    </div>
+
+</div>
+
+<div id="aboutPopup"
+style="
+display:none;
+position:fixed;
+top:50%;
+left:50%;
+transform:translate(-50%,-50%);
+width:400px;
+max-width:90%;
+background:rgba(30,30,30,.95);
+padding:25px;
+border-radius:20px;
+color:white;
+z-index:99999;
+box-shadow:0 15px 40px rgba(0,0,0,.4);
+">
+
+<h2 id="popupTitle"></h2>
+
+<p id="popupText"></p>
+
+<button
+onclick="closePopup()"
+style="
+margin-top:20px;
+padding:8px 20px;
+border:none;
+border-radius:15px;
+cursor:pointer;
+">
+Close
+</button>
 
 </div>
 
@@ -1915,12 +2340,9 @@ position:relative;
     }
 
     function generateAiReply(input) {
-        // I-clean ang input para walang sabit sa spaces at capitalization
+    
         const cleanInput = input.toLowerCase().trim();
 
-        // ==========================================
-        // 1. GREETINGS, KAMUSTAHAN, O CHILL TALK
-        // ==========================================
         if (cleanInput.includes('hello') || cleanInput.includes('hi') || cleanInput.includes('kamusta') || cleanInput.includes('wazzup') || cleanInput.includes('hoy')) {
             const greetings = [
                 "Hey there, ka-biyahe! Ayos naman ako, laging ready mag-gala. Handa ka na bang mag-explore sa Pilipinas? Saan mo gustong pumunta ngayon?",
@@ -1934,10 +2356,6 @@ position:relative;
             return "Marami akong kayang gawin! Pwede mo akong tanungin tungkol sa Luzon, Visayas, Mindanao, mga sikat na pagkain, budget tips, kailan magandang bumiyahe, o kaya humingi ng travel joke at hugot! Subukan mo.";
         }
 
-        // ==========================================
-        // 2. REHIYON AT MGA SPECIFIC HOTSPOTS
-        // ==========================================
-        // LUZON MAIN
         if (cleanInput.includes('luzon')) {
             return "Sa Luzon, napakagandang bisitahin ang Banaue Rice Terraces, makasaysayang Calle Crisologo sa Vigan, o ang Bulkang Mayon sa Albay! Click mo lang yung Luzon sa map widget para sa detalye.";
         }
@@ -1996,7 +2414,6 @@ position:relative;
             return "Ui, ka-romantic! 😍 Kung gusto mo ng sweet at chill, dalhin mo si jowa sa Batanes, sa sunset ng Boracay, o mag-dinner kayo sa mga cliffside restaurants sa Tagaytay habang malamig ang simoy ng hangin.";
         }
 
-        // ==========================================
         if (cleanInput.includes('pagkain') || cleanInput.includes('kain') || cleanInput.includes('masarap') || cleanInput.includes('food') || cleanInput.includes('gutom')) {
             return "Naku, pagdating sa pagkain, huwag palampasin ang Bagnet sa Ilocos, La Paz Batchoy sa Iloilo, Lechon sa Cebu, at Durian sa Davao! Ano ang paborito mong Pinoy food?";
         }
@@ -2005,7 +2422,6 @@ position:relative;
             return "Huwag uuwi nang walang pasalubong! Kung galing ka sa Norte, kumuha ka ng Chichacorn o Longganisa. Kung sa Visayas, paborito ang Otap, Piaya, o Tuyong Danggit. Sa Mindanao naman, Pastel rolls o Durian candy ang patok!";
         }
 
-        // ==========================================
         if (cleanInput.includes('byahe') || cleanInput.includes('sakay') || cleanInput.includes('paano pumunta') || cleanInput.includes('transport') || cleanInput.includes('eroplano') || cleanInput.includes('bus')) {
             return "Para sa malalayong isla, Cebu Pacific at Philippine Airlines ang go-to flights natin. Kung island hopping sa Visayas, marami tayong fast craft (RoRo). Huwag ding kalilimutan ang classic Pinoy Jeepney at Tricycle ride para sa authentic experience!";
         }
@@ -2014,7 +2430,6 @@ position:relative;
             return "Road trip ba? Masaya 'yan pa-Norte via TPLEX (Vigan/Pari-pari sa Ilocos) o kaya pa-South papuntang Bicol via AH26! Siguraduhing may RFID load ang Autosweep at Easytrip mo para iwas-abala sa toll gates.";
         }
 
-        // ==========================================
         if (cleanInput.includes('kailan maganda') || cleanInput.includes('best time') || cleanInput.includes('bakasyon') || cleanInput.includes('summer')) {
             return "Ang pinakamagandang buwan para mag-gala sa Pinas ay mula Disyembre hanggang Mayo (Dry Season) para iwas-ulan sa beach. Kung gusto mo naman ng mga festival, masaya tuwing Enero (Sinulog/Ati-Atihan) o Abril (Moriones)!";
         }
@@ -2023,7 +2438,6 @@ position:relative;
             return "Hindi ko pa live na nakikita ang panahon sa labas ng server ko, pero siguraduhing magdala ng payong o sunscreen bago bumiyahe! Laging mag-check sa PAGASA updates para safe ang biyahe.";
         }
 
-        // ==========================================
         if (cleanInput.includes('naiwan') || cleanInput.includes('flight') || cleanInput.includes('late')) {
             return "🚨 Hala! Kung naiwan ka ng eroplano o bus, huwag mag-panic. Pumunta agad sa customer service desk ng airline o terminal. Pwede ka nilang i-rebook sa susunod na available flight/trip (may kaunting fee nga lang, depende sa ticket terms). Breathe in, breathe out!";
         }
@@ -2074,23 +2488,6 @@ position:relative;
         return defaultReplies[Math.floor(Math.random() * defaultReplies.length)];
     }
 
-    const aboutBtn = document.getElementById('aboutBtn');
-const aboutModal = document.getElementById('aboutModal');
-const aboutClose = document.querySelector('.about-close');
-
-aboutBtn.addEventListener('click', () => {
-    aboutModal.classList.add('show');
-});
-
-aboutClose.addEventListener('click', () => {
-    aboutModal.classList.remove('show');
-});
-
-aboutModal.addEventListener('click', (e) => {
-    if(e.target === aboutModal){
-        aboutModal.classList.remove('show');
-    }
-});
 
 const API_KEY = "eb1081eecfb6999f3f779341b0525707";
 
@@ -2374,6 +2771,103 @@ updateAnalogClock,
 );
 
 updateAnalogClock();
+
+function toggleAboutMenu(){
+
+    document
+    .getElementById(
+    "aboutBtn"
+    )
+    .classList.toggle(
+    "active"
+    );
+
+}
+
+function showAboutInfo(){
+
+    document.getElementById(
+    "popupTitle"
+    ).innerHTML=
+    "📖 About Biyahe ni Juan";
+
+    document.getElementById(
+    "popupText"
+    ).innerHTML=
+    "Biyahe ni Juan is an all-in-one travel journal for exploring the Philippines.";
+
+    document.getElementById(
+    "aboutPopup"
+    ).style.display=
+    "flex";
+
+}
+
+function showMission(){
+
+    document.getElementById(
+    "popupTitle"
+    ).innerHTML=
+    "ℹ️ About Us";
+
+    document.getElementById(
+    "popupText"
+    ).innerHTML=
+    "Our mission is to help travelers discover, plan, and enjoy the beauty of the Philippines through one modern travel platform.";
+
+    document.getElementById(
+    "aboutPopup"
+    ).style.display=
+    "flex";
+
+}
+
+function showEmail(){
+
+    document.getElementById(
+    "popupTitle"
+    ).innerHTML=
+    "📧 Contact";
+
+    document.getElementById(
+    "popupText"
+    ).innerHTML=
+    "Email us at:\n\nbiyahenijuan@gmail.com";
+
+    document.getElementById(
+    "aboutPopup"
+    ).style.display=
+    "flex";
+
+}
+
+function showAddress(){
+
+    document.getElementById(
+    "popupTitle"
+    ).innerHTML=
+    "🏠 Address";
+
+    document.getElementById(
+    "popupText"
+    ).innerHTML=
+    "Naic, Cavite Philippines";
+
+    document.getElementById(
+    "aboutPopup"
+    ).style.display=
+    "flex";
+
+}
+
+function closePopup(){
+
+    document.getElementById(
+    "aboutPopup"
+    ).style.display=
+    "none";
+
+}
 
 </script>
 </body>

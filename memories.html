@@ -26,10 +26,6 @@
 
         }
 
-
-
-        /* 🎬 ANIMATION 1: Entrance ng Main Glass Container */
-
         @keyframes containerEntrance {
 
             from {
@@ -50,10 +46,6 @@
 
         }
 
-
-
-        /* Glassmorphism Container na may Entrance Animation */
-
         .memories-container {
 
             background: rgba(255, 255, 255, 0.08);
@@ -68,10 +60,6 @@
 
             width: 900px; max-width: 95%; max-height: 90vh; overflow-y: auto;
 
-            
-
-            /* In-activate ang entrance animation */
-
             animation: containerEntrance 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 
         }
@@ -85,10 +73,6 @@
             border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 15px; margin-bottom: 20px;
 
         }
-
-
-
-        /* Form Controls */
 
         .upload-box {
 
@@ -130,19 +114,11 @@
 
         button:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,210,255,0.3); }
 
-
-
-        /* Polaroid Photo Grid */
-
         .gallery-grid {
 
             display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 20px; margin-top: 20px;
 
         }
-
-
-
-        /* 🎬 ANIMATION 2: Swabeng paglitaw ng bawat Polaroid Card */
 
         @keyframes polaroidPop {
 
@@ -174,31 +150,15 @@
 
             position: relative; color: #333;
 
-            
-
-            /* Default state bago mag-animate */
-
             opacity: 0;
-
-            
-
-            /* Pinapatakbo ang pop animation kapag na-render */
 
             animation: polaroidPop 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.1) forwards;
 
-            /* Ang delay ay dynamic nating ikakabit gamit ang JS loop sa ilalim */
-
             animation-delay: calc(var(--delay) * 0.1s);
-
-            
 
             transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1), box-shadow 0.4s ease;
 
         }
-
-        
-
-        /* Floating at straightening effect tuwing io-hover */
 
         .polaroid:hover { 
 
@@ -248,17 +208,9 @@
 
         .no-data { text-align: center; color: #ccc; grid-column: 1 / -1; padding: 4px; font-style: italic; }
 
-        
-
-        /* Custom Scrollbar */
-
         .memories-container::-webkit-scrollbar { width: 6px; }
 
         .memories-container::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 10px; }
-
-
-
-        /* Lightbox Backdrop Overlay */
 
         .lightbox-overlay {
 
@@ -280,10 +232,6 @@
 
         }
 
-
-
-        /* Lalabas kapag active */
-
         .lightbox-overlay.show {
 
             opacity: 1;
@@ -291,10 +239,6 @@
             pointer-events: auto;
 
         }
-
-
-
-        /* Giant Polaroid Container */
 
         .giant-polaroid {
     background: white;
@@ -309,7 +253,6 @@
     flex-direction: column;
     align-items: center;
 
-    /* removed zoom animation */
     transform: none;
 }
 
@@ -320,10 +263,6 @@
             transform: scale(1) rotate(0deg);
 
         }
-
-
-
-        /* Ang Giant Image sa loob ng papel */
 
         .giant-polaroid img {
 
@@ -349,10 +288,6 @@
         floatCard 4s ease-in-out infinite;
 }
 
-
-
-        /* Ang Giant Custom Caption */
-
         .giant-caption {
 
             font-family: 'Courier New', Courier, monospace;
@@ -372,10 +307,6 @@
             width: 100%;
 
         }
-
-
-
-        /* Close button style */
 
         .close-lightbox {
 
@@ -414,7 +345,7 @@
 }
 
 .polaroid {
-    opacity: 0; /* default hidden */
+    opacity: 0;
 }
 
 .top-tools{
@@ -634,7 +565,7 @@ function renderFilteredGallery(data){
 
     const loggedInUser = localStorage.getItem('username') || 'Traveler';
 
-    const API_URL = 'https://biyahe-ni-juan-backend.onrender.com'; // I-check kung ito ang port ng server mo
+    const API_URL = 'https://biyahe-ni-juan-backend.onrender.com';
 
     
 

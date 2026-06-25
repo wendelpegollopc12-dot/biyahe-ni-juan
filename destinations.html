@@ -12,7 +12,7 @@
                         url('https://upload.wikimedia.org/wikipedia/commons/thumb/e/e6/Mayon_Volcano_in_Albay.jpg/1920px-Mayon_Volcano_in_Albay.jpg?utm_source=en.wikivoyage.org&utm_campaign=parser&utm_content=thumbnail');
             background-size: cover; background-position: center;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            overflow: hidden; /* No browser scroll */
+            overflow: hidden;
             position: relative;
         }
 
@@ -146,11 +146,10 @@
             z-index: 1; pointer-events: none;
         }
 
-        /* RPG/VISUAL NOVEL STYLE CHARACTER PRESENTATION */
         .game-presentation-layer {
             position: fixed;
             bottom: 0;
-            right: -400px; /* Nakatago muna sa labas ng screen */
+            right: -400px;
             width: 380px;
             height: auto;
             display: flex;
@@ -158,16 +157,15 @@
             align-items: center;
             z-index: 10000;
             pointer-events: none;
-            transition: right 0.8s cubic-bezier(0.19, 1, 0.22, 1); /* Swabeng slide-in effect */
+            transition: right 0.8s cubic-bezier(0.19, 1, 0.22, 1);
         }
         .game-presentation-layer.slide-in {
-            right: 20px; /* Papasok sa screen */
+            right: 20px;
         }
-        
-        /* MAS MALAKING CHARACTER PORTRAIT BOX */
+
         .char-portrait-wrapper {
-            width: 340px;  /* Mula sa 280px, ginawa nating 340px para mas malapad ka */
-            height: 460px; /* Mula sa 380px, ginawa nating 460px para mas mataas at malaki */
+            width: 340px;
+            height: 460px;
             display: flex;
             justify-content: center;
             align-items: flex-end;
@@ -179,10 +177,9 @@
             height: 100%;
             object-fit: contain;
             filter: drop-shadow(0 15px 25px rgba(0,0,0,0.6));
-            animation: charFloat 4s ease-in-out infinite; /* Humihingang epekto parang sa laro */
+            animation: charFloat 4s ease-in-out infinite;
         }
 
-        /* Presentation Dialog Box */
         .char-dialog-box {
             background: rgba(10, 18, 32, 0.65);
             backdrop-filter: blur(20px);
@@ -196,14 +193,14 @@
             pointer-events: auto;
             transform: translateY(50px);
             opacity: 0;
-            transition: all 0.5s ease 0.4s; /* Papasok pagkatapos ng tao */
+            transition: all 0.5s ease 0.4s;
             margin-bottom: 25px;
         }
-        /* ADJUSTED LAYER PARA SA MAS MALAKING PHOTO */
+
         .game-presentation-layer {
             position: fixed;
             bottom: 0;
-            right: -700px; /* Mas pinalayo ang tago sa simula kasi mas malaki na ang card mo */
+            right: -700px;
             width: auto;
             display: flex;
             align-items: flex-end; 
@@ -213,13 +210,12 @@
             transition: right 0.8s cubic-bezier(0.19, 1, 0.22, 1);
         }
         .game-presentation-layer.slide-in {
-            right: 20px; /* Papasok nang buo sa gilid */
+            right: 20px;
         }
 
-        /* ANG TODO-LAKING LARAWAN MO */
         .char-portrait-wrapper {
-            width: 380px;  /* Mula sa 300px, ginawa nating 380px para mas malapad ka */
-            height: 550px; /* Mula sa 450px, ginawa nating 550px para talagang mataas at malaki ka */
+            width: 380px;
+            height: 550px;
             display: flex;
             justify-content: center;
             align-items: flex-end;
@@ -227,7 +223,6 @@
             pointer-events: auto;
         }
 
-        /* (Optional) Inayos ko rin ang pwesto ng text box para pantay sa dibdib mo ang liyab */
         .char-dialog-box {
             background: rgba(10, 18, 32, 0.75);
             backdrop-filter: blur(20px);
@@ -239,7 +234,7 @@
             width: 320px; 
             box-shadow: 0 20px 50px rgba(0,0,0,0.6);
             pointer-events: auto;
-            margin-bottom: 50px; /* Itinaas pa natin para hindi ka matakpan sa braso */
+            margin-bottom: 50px;
             opacity: 0;
             transform: translateX(-30px);
             transition: all 0.5s ease 0.4s;
@@ -279,10 +274,9 @@
             color: #ff4a4a;
         }
 
-        /* Ang Malaking Larawan Mo (Nasa Kanan ngayon) */
         .char-portrait-wrapper {
-            width: 300px;  /* Tamang lapad para sa photo mo */
-            height: 450px; /* Tamang taas para malaki ka tingnan */
+            width: 300px;
+            height: 450px;
             display: flex;
             justify-content: center;
             align-items: flex-end;
@@ -292,7 +286,7 @@
         .char-image {
             width: 100%;
             height: 100%;
-            object-fit: contain; /* Para hindi ma-stretch ang mukha mo */
+            object-fit: contain;
             filter: drop-shadow(0 15px 25px rgba(0,0,0,0.6));
             animation: charFloat 4s ease-in-out infinite;
         }
@@ -302,10 +296,9 @@
             50% { transform: translateY(-8px); }
         }
 
-        /* Mobile Responsive adjustment para hindi masira sa CP mo */
         @media (max-width: 600px) {
             .game-presentation-layer {
-                flex-direction: column-reverse; /* Ibabalik sa patayo kapag maliit ang screen */
+                flex-direction: column-reverse;
                 align-items: center;
                 width: 100%;
                 right: -100%;
@@ -375,7 +368,7 @@
 
 
     <script>
-        // Lahat ng link dito ay pinalitan ng working embed nature video para sa testing
+
         const destinations = [
             { name: "Boracay, Aklan", mood: "chill", budget: "₱5,000 - ₱10,000+", desc: "The ultimate island getaway with powdery white sand.", img: "https://context.ph/wp-content/uploads/2025/12/Boracay-shutterstock_1766920796.jpg", video_embed: "https://www.youtube.com/embed/R7OTRH5rzy8?si=GyYF5QTYuH2H_YgZ" },
             { name: "Baguio City", mood: "chill", budget: "₱3,000 - ₱6,000", desc: "Cozy sweaters, strawberries, and pine-scented air.", img: "https://www.agoda.com/wp-content/uploads/2024/05/Philippines-Baguio-City.jpg", video_embed: "https://www.youtube.com/embed/0QO88x3lJVc?si=2nCtKsnCRKdGVCKr" },
@@ -437,7 +430,6 @@
             btn.classList.toggle('liked');
         }
 
-        // Modal Controls
         function playVideo(videoUrl) {
             const modal = document.getElementById('videoModal');
             const video = document.getElementById('promoVideo');
@@ -455,7 +447,6 @@
             video.src = ""; 
         }
 
-        // Single Dynamic Greeting Source
         function updateGreeting() {
             const hours = new Date().getHours();
             const title = document.querySelector('.title-pinas');
@@ -465,48 +456,38 @@
             }
         }
 
-        // Initialize UI Elements
         renderGrid();
         updateGreeting();
 
-        // Spotlight Follow Core
         document.querySelector('.app-container').onmousemove = e => {
             const rect = e.currentTarget.getBoundingClientRect();
             e.currentTarget.style.setProperty('--mouse-x', `${(e.clientX - rect.left)}px`);
             e.currentTarget.style.setProperty('--mouse-y', `${(e.clientY - rect.top)}px`);
         };
 
-        // FLOATING TOUR GUIDE INITIALIZATION
     document.addEventListener("DOMContentLoaded", () => {
         const guide = document.getElementById("tour-guide-character");
         const bubble = document.getElementById("welcome-bubble");
 
-        // Hakbang 1: Papasukin ang karakter pagkatapos ng 1 segundo
         setTimeout(() => {
             guide.classList.add("active");
         }, 1000);
 
-        // Hakbang 2: Papasukin ang speech bubble pagkatapos ng 1.8 segundo
         setTimeout(() => {
             bubble.classList.add("active");
         }, 1800);
 
-        // Hakbang 3: Kusang itago ang text bubble pagkalipas ng 7 segundo para hindi makaharang
         setTimeout(() => {
             bubble.classList.remove("active");
         }, 8500);
     });
 
-    // GAME-STYLE CHARACTER PRESENTATION LOGIC
     document.addEventListener("DOMContentLoaded", () => {
         const presentationLayer = document.getElementById("presentation-character");
         
-        // Mag-slide in ang karakter pagkatapos ng 1.2 segundo
         setTimeout(() => {
             presentationLayer.classList.add("slide-in");
         }, 1200);
-        
-        // (Optional) Kung gusto mong kusa siyang umalis pagkalipas ng 12 segundo, i-uncomment ang code sa ibaba:
         
         setTimeout(() => {
             dismissPresentation();
